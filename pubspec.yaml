@@ -34,6 +34,30 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+  firebase_core: ^4.11.0
+
+  # State management (mandated by engineering guide: Cubit).
+  flutter_bloc: ^9.0.0
+
+  # Dependency injection (mandated by engineering guide: GetIt).
+  get_it: ^9.2.1
+
+  # Routing (mandated by engineering guide: GoRouter).
+  go_router: ^17.3.0
+
+  # Local persistence for theme mode, locale and preferences.
+
+  # Date, number and currency formatting.
+  intl: ^0.20.2
+
+  # Localization (easy_localization: en/ar, RTL/LTR, no code generation).
+  easy_localization: ^3.0.0
+  equatable: ^2.1.0
+  connectivity_plus: ^7.2.0
+  firebase_auth: ^6.5.5
+  google_sign_in: ^7.2.0
+  dartz: ^0.10.1
+  shared_preferences: ^2.5.5
 
 dev_dependencies:
   flutter_test:

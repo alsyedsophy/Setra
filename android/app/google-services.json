@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "527014973576",
+    "project_id": "setra-60c09",
+    "storage_bucket": "setra-60c09.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:527014973576:android:00e13a89c9e653f4228f3d",
+        "android_client_info": {
+          "package_name": "com.example.setra"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBR9vENJn8KbSNe3QKU2oEqXvDipw3qNsI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

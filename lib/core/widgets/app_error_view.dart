@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:setra/core/components/app_button.dart';
+import 'package:setra/core/extensions/extensions.dart';
+import 'package:setra/core/extensions/num_extensions.dart';
 
 import '../design_system/design_system.dart';
 
@@ -26,29 +28,26 @@ class AppErrorView extends StatelessWidget {
     final String? retryLabel = this.retryLabel;
 
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Icon(
-              Icons.error_outline,
-              size: AppSpacing.xl,
-              color: theme.colorScheme.error,
-            ),
-            const SizedBox(height: AppSpacing.md),
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style: theme.textTheme.bodyLarge,
-            ),
-            if (onRetry != null && retryLabel != null) ...<Widget>[
-              const SizedBox(height: AppSpacing.lg),
-              AppButton(label: retryLabel, onPressed: onRetry),
-            ],
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Icon(
+            Icons.error_outline,
+            size: AppSpacing.s_30,
+            color: theme.colorScheme.error,
+          ),
+          AppSpacing.h_24.hSpace,
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: theme.textTheme.bodyLarge,
+          ),
+          if (onRetry != null && retryLabel != null) ...<Widget>[
+            AppSpacing.h_24.hSpace,
+            AppButton(label: retryLabel, onPressed: onRetry),
           ],
-        ),
-      ),
+        ],
+      ).paddingAll(AppSpacing.h_24),
     );
   }
 }

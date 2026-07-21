@@ -1,78 +1,120 @@
 import 'package:flutter/material.dart';
+import 'package:setra/core/design_system/app_spacing.dart';
 import 'package:setra/core/extensions/context_extensions.dart';
+import 'package:setra/core/extensions/num_extensions.dart';
 
-import '../design_system/app_spacing.dart';
-
-enum AppButtonVariant { primary, secondary }
+enum ButtonType { primary, outlined, text }
 
 class AppButton extends StatelessWidget {
   const AppButton({
+    super.key,
     required this.label,
-    required this.onPressed,
-    this.variant = AppButtonVariant.primary,
+    this.onPressed,
+    this.type = ButtonType.primary,
     this.isLoading = false,
     this.icon,
-    this.isFullWidth = false,
-    super.key,
+    this.width,
+    this.height = 56,
+    this.textStyle,
+    this.iconColor,
   });
 
   final String label;
   final VoidCallback? onPressed;
-  final AppButtonVariant variant;
+  final ButtonType type;
   final bool isLoading;
   final IconData? icon;
-  final bool isFullWidth;
-
-  VoidCallback? get _effectiveOnPressed => isLoading ? null : onPressed;
-
-  Widget _buildChild(ThemeData theme) {
-    if (isLoading) {
-      final Color indicatorColor = variant == AppButtonVariant.primary
-          ? theme.colorScheme.onPrimary
-          : theme.colorScheme.primary;
-      return SizedBox(
-        width: 18,
-        height: 18,
-        child: CircularProgressIndicator(strokeWidth: 2, color: indicatorColor),
-      );
-    }
-
-    final Widget text = Text(label);
-
-    if (icon != null) {
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 18),
-          const SizedBox(width: AppSpacing.sm),
-          text,
-        ],
-      );
-    }
-
-    return text;
-  }
+  final double? width;
+  final double height;
+  final TextStyle? textStyle;
+  final Color? iconColor;
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = context.theme;
-    final Widget child = _buildChild(theme);
+    final theme = context.theme;
+    final colorScheme = theme.colorScheme;
 
-    final Widget button = switch (variant) {
-      AppButtonVariant.primary => FilledButton(
-        onPressed: _effectiveOnPressed,
-        child: child,
-      ),
-      AppButtonVariant.secondary => OutlinedButton(
-        onPressed: _effectiveOnPressed,
-        child: child,
-      ),
-    };
+    // TextStyle الفعال (مع الأولوية للـ textStyle الممرر)
+    final TextStyle effectiveTextStyle =
+        textStyle ??
+        theme.textTheme.labelLarge!.copyWith(
+          color: type == ButtonType.outlined || type == ButtonType.text
+              ? colorScheme.primary
+              : colorScheme.onPrimary,
+        );
 
-    if (isFullWidth) {
-      return SizedBox(width: double.infinity, child: button);
+    final child = isLoading
+        ? Center(
+            child: SizedBox(
+              width: 22,
+              height: 22,
+              child: CircularProgressIndicator(
+                strokeWidth: 2.5,
+                color: effectiveTextStyle.color,
+              ),
+            ),
+          )
+        : Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (icon != null) ...[
+                Icon(
+                  icon,
+                  size: AppSpacing.s_20,
+                  color: iconColor ?? effectiveTextStyle.color,
+                ),
+                AppSpacing.w_8.wSpace,
+              ],
+              Text(label, style: effectiveTextStyle),
+            ],
+          );
+
+    Widget button;
+
+    switch (type) {
+      case ButtonType.primary:
+        button = ElevatedButton(
+          onPressed: isLoading ? null : onPressed,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: colorScheme.primary,
+            foregroundColor: colorScheme.onPrimary,
+            shape: RoundedRectangleBorder(borderRadius: AppSpacing.r_10.rAll),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+          ),
+          child: child,
+        );
+        break;
+
+      case ButtonType.outlined:
+        button = OutlinedButton(
+          onPressed: isLoading ? null : onPressed,
+          style: OutlinedButton.styleFrom(
+            foregroundColor: effectiveTextStyle.color, // هذا هو الحل الرئيسي
+            side: BorderSide(color: colorScheme.outline),
+            shape: RoundedRectangleBorder(borderRadius: AppSpacing.r_10.rAll),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+          ),
+          child: child,
+        );
+        break;
+
+      case ButtonType.text:
+        button = TextButton(
+          onPressed: isLoading ? null : onPressed,
+          style: TextButton.styleFrom(
+            foregroundColor: effectiveTextStyle.color,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+          ),
+          child: child,
+        );
+        break;
     }
 
-    return button;
+    return SizedBox(
+      width: width ?? double.infinity,
+      height: height,
+      child: button,
+    );
   }
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:setra/core/extensions/extensions.dart';
+import 'package:setra/core/extensions/num_extensions.dart';
 
 import '../design_system/design_system.dart';
 
@@ -20,25 +22,22 @@ class AppEmptyView extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
 
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Icon(
-              icon,
-              size: AppSpacing.xl,
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-            const SizedBox(height: AppSpacing.md),
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style: theme.textTheme.bodyLarge,
-            ),
-          ],
-        ),
-      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Icon(
+            icon,
+            size: AppSpacing.s_30,
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+          AppSpacing.h_24.hSpace,
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: theme.textTheme.bodyLarge,
+          ),
+        ],
+      ).paddingAll(AppSpacing.h_48),
     );
   }
 }

@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:setra/core/extensions/num_extensions.dart';
 import '../design_system/app_spacing.dart';
 
 class AppCard extends StatelessWidget {
   const AppCard({
     required this.child,
     this.onTap,
-    this.padding = const EdgeInsets.all(AppSpacing.md),
+    this.padding,
     this.elevation = 4,
     super.key,
   });
 
   final Widget child;
   final VoidCallback? onTap;
-  final EdgeInsetsGeometry padding;
+  final EdgeInsetsGeometry? padding;
   final double elevation;
 
   @override
   Widget build(BuildContext context) {
-    final Widget content = Padding(padding: padding, child: child);
+    final EdgeInsetsGeometry effectivePadding = padding ?? AppSpacing.h_24.pAll;
+    final Widget content = Padding(padding: effectivePadding, child: child);
 
     return Card(
       elevation: elevation,

@@ -82,14 +82,14 @@ class AppTheme {
       borderRadius: AppRadius.mdRadius,
     );
 
-    final EdgeInsetsGeometry buttonPadding = const EdgeInsets.symmetric(
-      horizontal: AppSpacing.lg,
-      vertical: AppSpacing.md,
+    final EdgeInsetsGeometry buttonPadding = EdgeInsets.symmetric(
+      horizontal: AppSpacing.h_48,
+      vertical: AppSpacing.w_24,
     );
 
-    final EdgeInsetsGeometry inputPadding = const EdgeInsets.symmetric(
-      horizontal: AppSpacing.md,
-      vertical: AppSpacing.sm,
+    final EdgeInsetsGeometry inputPadding = EdgeInsets.symmetric(
+      horizontal: AppSpacing.h_24,
+      vertical: AppSpacing.w_4,
     );
 
     return ThemeData(

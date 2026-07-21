@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:setra/features/auth/auth_injection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../localization/locale_cubit.dart';
@@ -28,5 +29,5 @@ Future<void> initCore() async {
   );
 
   //? ============ Auth ==============
-  // await registerAuthentication();
+  await registerAuthentication();
 }

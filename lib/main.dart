@@ -1,20 +1,23 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:setra/core/theme/theme_cubit.dart';
+import 'package:setra/features/auth/presentation/cubit/auth/auth_cubit.dart';
 import 'package:setra/firebase_options.dart';
 
 import 'app/app.dart';
 import 'core/dependency_injection/dependency_injection.dart';
-import 'core/extensions/extensions.dart';
+// import 'core/extensions/extensions.dart';
 import 'core/localization/localization.dart';
-import 'core/widgets/widgets.dart';
+// import 'core/widgets/widgets.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await EasyLocalization.ensureInitialized();
   await initCore();
-  runApp(App());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -24,7 +27,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        // BlocProvider(create: (context) => getIt<AuthCubit>()),
+        BlocProvider(create: (context) => getIt<AuthCubit>()),
         BlocProvider(create: (context) => getIt<LocaleCubit>()..loadLocale()),
         BlocProvider(create: (context) => getIt<ThemeCubit>()..loadTheme()),
       ],

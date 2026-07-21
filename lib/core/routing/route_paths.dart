@@ -14,4 +14,10 @@ class RoutePaths {
 
   static const String register = '/register';
   static const String registerName = 'register';
+
+  static const String verifyEmail = '/verify';
+  static const String verifyEmailName = 'verify';
+
+  static const String forgetPasswod = '/forget_password';
+  static const String forgetPasswodName = 'forget_password';
 }

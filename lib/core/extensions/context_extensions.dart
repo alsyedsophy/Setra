@@ -12,8 +12,22 @@ extension ContextExtensions on BuildContext {
 
   MediaQueryData get mediaQuery => MediaQuery.of(this);
 
+  //? Responsive
+
   bool get isMobile => AppResponsive.isMobile(this);
   bool get isTablet => AppResponsive.isTablet(this);
   bool get isDesktop => AppResponsive.isDesktop(this);
   AppBreakpoint get breakpoint => AppResponsive.breakpointOf(this);
+
+  T responsive<T>({
+    required T mobile,
+    T? tablet,
+    T? desktop,
+  }) =>
+      AppResponsive.value(
+        this,
+        mobile: mobile,
+        tablet: tablet,
+        desktop: desktop,
+      );
 }

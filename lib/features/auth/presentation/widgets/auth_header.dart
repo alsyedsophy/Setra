@@ -10,17 +10,30 @@ class AuthHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final TextStyle? titleStyle = context.responsive<TextStyle?>(
+      mobile: context.textTheme.headlineLarge,
+      desktop: context.textTheme.displayLarge,
+    );
+
+    final double topGap = context.responsive(
+      mobile: AppSpacing.h_32,
+      tablet: AppSpacing.h_40,
+    );
+    final double bottomGap = context.responsive(
+      mobile: AppSpacing.h_48,
+      tablet: AppSpacing.h_56,
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AppSpacing.h_32.hSpace,
+        topGap.hSpace,
         Align(
           alignment: Alignment.center,
-          child: Text(title, style: context.textTheme.displayLarge),
+          child: Text(title, style: titleStyle),
         ),
         AppSpacing.h_8.hSpace,
         Center(child: Text(welcome, style: context.textTheme.bodySmall)),
-        AppSpacing.h_48.hSpace,
+        bottomGap.hSpace,
       ],
     );
   }

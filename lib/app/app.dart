@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-import '../core/dependency_injection/dependency_injection.dart';
+// import '../core/dependency_injection/dependency_injection.dart';
 import '../core/design_system/design_system.dart';
 import '../core/localization/localization.dart';
 import '../core/routing/routing.dart';

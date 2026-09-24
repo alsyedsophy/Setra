@@ -84,7 +84,7 @@ class RegisterForm extends StatelessWidget {
           onLogin: _onRegister,
           title: context.l10n.tr(L10nKeys.uCreateAccount),
         ),
-        AppSpacing.h_48.hSpace,
+        // AppSpacing.h_48.hSpace,
       ],
     );
   }

@@ -2,12 +2,10 @@ import 'package:flutter/widgets.dart';
 
 import 'breakpoints.dart';
 
-/// Resolves the active [AppBreakpoint] and exposes responsive helpers.
 class AppResponsive {
   AppResponsive._();
 
-  static AppBreakpoint breakpointOf(BuildContext context) {
-    final double width = MediaQuery.sizeOf(context).width;
+  static AppBreakpoint breakpointForWidth(double width) {
     if (width >= AppBreakpoints.desktop) {
       return AppBreakpoint.desktop;
     }
@@ -16,6 +14,11 @@ class AppResponsive {
     }
     return AppBreakpoint.mobile;
   }
+
+  static AppBreakpoint breakpointOf(BuildContext context) =>
+      breakpointForWidth(MediaQuery.sizeOf(context).width);
+
+  //? ========= not important enugth ===========
 
   static bool isMobile(BuildContext context) =>
       breakpointOf(context) == AppBreakpoint.mobile;
@@ -38,15 +41,15 @@ class AppResponsive {
     }
   }
 
-  /// Returns the value matching the active breakpoint, falling back to smaller
-  /// breakpoints when a larger one is not provided.
-  static T value<T>(
-    BuildContext context, {
+  //? =====================================
+
+  static T valueForWidth<T>(
+    double width, {
     required T mobile,
     T? tablet,
     T? desktop,
   }) {
-    switch (breakpointOf(context)) {
+    switch (breakpointForWidth(width)) {
       case AppBreakpoint.desktop:
         return desktop ?? tablet ?? mobile;
       case AppBreakpoint.tablet:
@@ -55,4 +58,18 @@ class AppResponsive {
         return mobile;
     }
   }
+
+  /// Returns the value matching the active breakpoint, falling back to smaller
+  /// breakpoints when a larger one is not provided.
+  static T value<T>(
+    BuildContext context, {
+    required T mobile,
+    T? tablet,
+    T? desktop,
+  }) => valueForWidth(
+    MediaQuery.sizeOf(context).width,
+    mobile: mobile,
+    tablet: tablet,
+    desktop: desktop,
+  );
 }

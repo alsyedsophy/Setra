@@ -1,4 +1,3 @@
-/// Device size categories used across the responsive system.
 enum AppBreakpoint { mobile, tablet, desktop }
 
 class AppBreakpoints {

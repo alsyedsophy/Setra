@@ -20,11 +20,6 @@ Future<void> registerAuthentication() async {
   getIt.registerLazySingleton<FirebaseAuth>(() => firabaseAuth);
   getIt.registerLazySingleton<GoogleSignIn>(() => googleSignIn);
 
-  getIt.registerLazySingleton<Connectivity>(() => Connectivity());
-  getIt.registerLazySingleton<NetworkInfo>(
-    () => NetworkInfoImpl(connectivity: getIt<Connectivity>()),
-  );
-
   // Data sources.
   getIt.registerLazySingleton<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(

@@ -40,5 +40,14 @@
   "dontReciveEmail" : " ألم تتلقَّ البريد الإلكتروني؟",
   "resend" : "إعادة إرسال",
   "forgetPass" : "نسيت كلمة المرور",
-  "welcomeForgetPass" : "أدخل بريدك الإلكتروني لاستعادة كلمة المرور."
+  "welcomeForgetPass" : "أدخل بريدك الإلكتروني لاستعادة كلمة المرور.",
+
+  "featuredProducts" : "منتجات مميزة",
+  "newArrivals" : "وصل حديثاً",
+  "categories" : "الأقسام",
+  "viewAll" : "عرض الكل",
+  "addToCart" : "أضف للسلة",
+  "addToFavorites" : "أضف للمفضلة",
+  "price" : "السعر",
+  "discount" : "خصم"
 }

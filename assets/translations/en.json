@@ -35,11 +35,19 @@
   "CreateAccount" : "Create Account",
   "haveAccount" : "Already have an account? ",
   "verifyEmail" : "Verify Your Email",
-  
+
   "checked" : "CHECKED",
   "dontReciveEmail" : "Did not receive The Email? ",
   "resend" : "Resend",
   "forgetPass" : "Forget Password",
-  "welcomeForgetPass" : "Enter your email to recover your password."
+  "welcomeForgetPass" : "Enter your email to recover your password.",
 
+  "featuredProducts" : "Featured Products",
+  "newArrivals" : "New Arrivals",
+  "categories" : "Categories",
+  "viewAll" : "View All",
+  "addToCart" : "Add to Cart",
+  "addToFavorites" : "Add to Favorites",
+  "price" : "Price",
+  "discount" : "Discount"
 }

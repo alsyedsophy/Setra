@@ -48,4 +48,14 @@ class L10nKeys {
   static const String resend = "resend";
   static const String forgetPass = "forgetPass";
   static const String welcomeForgetPass = "welcomeForgetPass";
+
+  // Home
+  static const String featuredProducts = "featuredProducts";
+  static const String newArrivals = "newArrivals";
+  static const String categories = "categories";
+  static const String viewAll = "viewAll";
+  static const String addToCart = "addToCart";
+  static const String addToFavorites = "addToFavorites";
+  static const String price = "price";
+  static const String discount = "discount";
 }

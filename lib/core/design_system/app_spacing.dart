@@ -36,16 +36,21 @@ class AppSpacing {
   static final double h_118 = 118.h;
   static final double h_128 = 128.h;
   static final double h_144 = 144.h;
+  static final double h_180 = 180.h;
   static final double h_193 = 193.h;
   static final double h_223 = 223.h;
   static final double h_230 = 230.h;
   static final double h_248 = 248.h;
   static final double h_300 = 300.h;
+
   static final double h_306 = 306.h;
   static final double h_320 = 320.h;
+  static final double h_340 = 340.h;
+  static final double h_350 = 350.h;
   static final double h_381 = 381.h;
   static final double h_384 = 384.h;
   static final double h_400 = 400.h;
+  static final double h_433 = 433.h;
   static final double h_600 = 600.h;
   static final double h_722 = 722.h;
   static final double h_809 = 809.h;
@@ -53,6 +58,7 @@ class AppSpacing {
   // Width
   static final double w_4 = 4.w;
   static final double w_8 = 8.w;
+  static final double w_10 = 10.w;
   static final double w_12 = 12.w;
   static final double w_16 = 16.w;
   static final double w_18 = 18.w;
@@ -68,6 +74,7 @@ class AppSpacing {
   static final double w_110 = 110.w;
   static final double w_128 = 128.w;
   static final double w_170 = 170.w;
+  static final double w_256 = 256.w;
   static final double w_360 = 360.w;
   static final double w_600 = 600.w;
   static final double w_800 = 800.w;

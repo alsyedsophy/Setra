@@ -1,5 +1,8 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get_it/get_it.dart';
+import 'package:setra/core/network/network_info.dart';
 import 'package:setra/features/auth/auth_injection.dart';
+import 'package:setra/features/home/home_injection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../localization/locale_cubit.dart';
@@ -28,6 +31,14 @@ Future<void> initCore() async {
     () => LocaleCubit(getIt<StorageService>()),
   );
 
+  getIt.registerLazySingleton<Connectivity>(() => Connectivity());
+  getIt.registerLazySingleton<NetworkInfo>(
+    () => NetworkInfoImpl(connectivity: getIt<Connectivity>()),
+  );
+
   //? ============ Auth ==============
   await registerAuthentication();
+
+  //? ============ Home ==============
+  await registerHome();
 }

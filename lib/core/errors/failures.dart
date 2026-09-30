@@ -1,8 +1,3 @@
-/// Base class for expected, business-level failures.
-///
-/// Failures represent conditions the application should handle (no network,
-/// invalid credentials, validation errors). They are the only error type that
-/// Cubits are allowed to catch, as opposed to unexpected [Exception]s.
 abstract class Failure {
   const Failure({required this.message, this.code});
 

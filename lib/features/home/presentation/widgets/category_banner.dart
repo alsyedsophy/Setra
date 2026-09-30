@@ -1,66 +1,70 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:setra/core/design_system/app_spacing.dart';
 import 'package:setra/core/extensions/extensions.dart';
 import 'package:setra/core/extensions/num_extensions.dart';
+import 'package:setra/core/widgets/app_network_image.dart';
+import 'package:setra/features/home/domain/entities/category_entity.dart';
 
 class CategoryBanner extends StatelessWidget {
   const CategoryBanner({
     super.key,
-    this.padding,
+    required this.category,
     this.height,
-    this.paddingRL,
-    this.paddingBottom,
-    this.lableColor,
-    this.titleColor,
   });
-  final double? padding;
+  final CategoryEntity category;
   final double? height;
-  final double? paddingRL;
-  final double? paddingBottom;
-  final Color? lableColor;
-  final Color? titleColor;
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      // fit: StackFit.expand,
-      children: [
-        ClipRRect(
-          borderRadius: AppSpacing.r_12.rAll,
-          child: Image.asset(
-            "assets/images/hoddis.png",
+    return ClipRRect(
+      borderRadius: AppSpacing.r_12.rAll,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          AppNetworkImage(
+            imageUrl: category.imageUrl,
             fit: BoxFit.cover,
-            width: double.infinity,
-            height: height ?? 200,
+            height: height ?? AppSpacing.h_248,
           ),
-        ).paddingHorizontal(padding ?? AppSpacing.w_12),
-        Positioned(
-          bottom: paddingBottom ?? 20,
-          right: paddingRL ?? 60,
-          left: paddingRL ?? 60,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "FASHOIN",
-                  style: context.textTheme.titleLarge!.copyWith(
-                    color: lableColor ?? context.colorScheme.primary,
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.transparent,
+                  Colors.black.withValues(alpha: 0.6),
+                ],
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: AppSpacing.h_20,
+            right: AppSpacing.w_16,
+            left: AppSpacing.w_16,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  category.name.toUpperCase(),
+                  style: context.textTheme.titleLarge?.copyWith(
+                    color: context.colorScheme.onPrimary,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-              ),
-              AppSpacing.h_16.hSpace,
-              Text(
-                "HODDIES",
-                style: context.textTheme.displayLarge!.copyWith(
-                  color: titleColor ?? context.colorScheme.onPrimary,
+                AppSpacing.h_4.hSpace,
+                Text(
+                  '${category.productCount} Products',
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    color: context.colorScheme.onPrimary.withValues(alpha: 0.9),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
-    );
+        ],
+      ),
+    ).paddingHorizontal(AppSpacing.w_12);
   }
 }

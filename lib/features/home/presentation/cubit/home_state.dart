@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:setra/features/home/domain/entities/banner_entity.dart';
 import 'package:setra/features/home/domain/entities/category_entity.dart';
-import 'package:setra/features/home/domain/entities/product_entity.dart';
+import 'package:setra/features/products/domain/entities/product_entity.dart';
 
 enum HomeStatus { initial, loading, loaded, error }
 

@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:setra/core/errors/exceptions.dart';
 import 'package:setra/features/home/data/models/banner_model.dart';
 import 'package:setra/features/home/data/models/category_model.dart';
-import 'package:setra/features/home/data/models/product_model.dart';
-import 'package:setra/features/home/domain/entities/product_entity.dart';
+import 'package:setra/features/products/data/models/product_model.dart';
+import 'package:setra/features/products/domain/entities/product_entity.dart';
 
 abstract class HomeRemoteDataSource {
   Future<List<BannerModel>> getBanners();
@@ -57,7 +57,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
           .orderBy('createdAt', descending: true)
           .get();
       return snapshot.docs
-          .map((doc) => ProductModel.fromFirestore(doc.data(), doc.id))
+          .map((doc) => ProductModel.fromFirestore(doc.data(), docId: doc.id))
           .toList();
     } on FirebaseException catch (e) {
       throw _handleFirebaseException(e);
@@ -73,7 +73,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
           .where('featured', isEqualTo: true)
           .get();
       return snapshot.docs
-          .map((doc) => ProductModel.fromFirestore(doc.data(), doc.id))
+          .map((doc) => ProductModel.fromFirestore(doc.data(), docId: doc.id))
           .toList();
     } on FirebaseException catch (e) {
       throw _handleFirebaseException(e);
@@ -89,7 +89,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
           .where('newArrival', isEqualTo: true)
           .get();
       return snapshot.docs
-          .map((doc) => ProductModel.fromFirestore(doc.data(), doc.id))
+          .map((doc) => ProductModel.fromFirestore(doc.data(), docId: doc.id))
           .toList();
     } on FirebaseException catch (e) {
       throw _handleFirebaseException(e);
@@ -104,7 +104,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
           .where('categoryId', isEqualTo: categoryId)
           .get();
       return snapshot.docs
-          .map((doc) => ProductModel.fromFirestore(doc.data(), doc.id))
+          .map((doc) => ProductModel.fromFirestore(doc.data(), docId: doc.id))
           .toList();
     } on FirebaseException catch (e) {
       throw _handleFirebaseException(e);
@@ -120,7 +120,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
           .where('tags', arrayContains: tag)
           .get();
       return snapshot.docs
-          .map((doc) => ProductModel.fromFirestore(doc.data(), doc.id))
+          .map((doc) => ProductModel.fromFirestore(doc.data(), docId: doc.id))
           .toList();
     } on FirebaseException catch (e) {
       throw _handleFirebaseException(e);
@@ -136,7 +136,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
           .where('gender', isEqualTo: gender.name)
           .get();
       return snapshot.docs
-          .map((doc) => ProductModel.fromFirestore(doc.data(), doc.id))
+          .map((doc) => ProductModel.fromFirestore(doc.data(), docId: doc.id))
           .toList();
     } on FirebaseException catch (e) {
       throw _handleFirebaseException(e);

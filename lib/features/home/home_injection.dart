@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get_it/get_it.dart';
 import 'package:setra/core/network/network_info.dart';
 import 'package:setra/features/home/domain/usecases/get_featured_use_case.dart';

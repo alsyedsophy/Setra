@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:setra/features/home/domain/entities/product_entity.dart';
+import 'package:setra/features/products/domain/entities/product_entity.dart';
 import 'package:setra/features/home/domain/usecases/get_banners_use_case.dart';
 import 'package:setra/features/home/domain/usecases/get_categories_use_case.dart';
 import 'package:setra/features/home/domain/usecases/get_featured_use_case.dart';

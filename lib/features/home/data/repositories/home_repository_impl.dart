@@ -5,7 +5,7 @@ import 'package:setra/core/network/network_info.dart';
 import 'package:setra/features/home/data/datasources/home_remote_data_source.dart';
 import 'package:setra/features/home/domain/entities/banner_entity.dart';
 import 'package:setra/features/home/domain/entities/category_entity.dart';
-import 'package:setra/features/home/domain/entities/product_entity.dart';
+import 'package:setra/features/products/domain/entities/product_entity.dart';
 import 'package:setra/features/home/domain/repositories/home_repository.dart';
 
 class HomeRepositoryImpl implements HomeRepository {

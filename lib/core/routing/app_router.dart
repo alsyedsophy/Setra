@@ -1,12 +1,6 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:setra/core/dependency_injection/service_locator.dart';
-import 'package:setra/core/routing/stream_listenable.dart';
-import 'package:setra/features/auth/presentation/cubit/auth/auth_cubit.dart';
-import 'package:setra/features/auth/presentation/cubit/auth/auth_state.dart';
-import 'package:setra/features/auth/auth_routes.dart';
+import 'package:setra/features/category/category_routes.dart';
 import 'package:setra/features/home/presentation/screens/home_screen.dart';
 
 import 'route_error_screen.dart';
@@ -22,7 +16,7 @@ class AppRouter {
       debugLogDiagnostics: true,
       // refreshListenable: StreamListenable(authCubit.stream),
       routes: <RouteBase>[
-        // ...authRoutes,
+        ...categoryRoutes,
         GoRoute(
           path: RoutePaths.home,
           name: RoutePaths.homeName,

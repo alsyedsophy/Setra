@@ -1,4 +1,3 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:setra/core/network/network_info.dart';
 import 'package:setra/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:setra/features/auth/data/repositories/auth_repository_impl.dart';

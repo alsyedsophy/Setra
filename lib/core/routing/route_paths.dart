@@ -20,4 +20,17 @@ class RoutePaths {
 
   static const String forgetPasswod = '/forget_password';
   static const String forgetPasswodName = 'forget_password';
+
+  // Category
+  static const String category = '/category';
+  static const String categoryName = 'category';
+  static const String categoryDetail = '/category/:categoryId';
+  static const String categoryDetailName = 'category_detail';
+
+  // Products
+  static const String products = '/products';
+  static const String productsName = 'products';
+
+  static const String productsDetails = '/products/details';
+  static const String productsDetailsName = 'products_details';
 }

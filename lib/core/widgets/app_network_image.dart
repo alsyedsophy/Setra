@@ -9,6 +9,7 @@ class AppNetworkImage extends StatelessWidget {
     this.width,
     this.height,
     this.fit = BoxFit.cover,
+    this.borderRadius,
     super.key,
   });
 
@@ -16,13 +17,14 @@ class AppNetworkImage extends StatelessWidget {
   final double? width;
   final double? height;
   final BoxFit fit;
+  final double? borderRadius;
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
 
     return ClipRRect(
-      borderRadius: AppRadius.mdRadius,
+      borderRadius: borderRadius == 0 ? BorderRadius.zero : AppRadius.mdRadius,
       child: Image.network(
         imageUrl,
         width: width,

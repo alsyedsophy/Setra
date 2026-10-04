@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:setra/features/category/category_routes.dart';
 import 'package:setra/features/home/presentation/screens/home_screen.dart';
+import 'package:setra/features/products/products_routes.dart';
 
 import 'route_error_screen.dart';
 import 'route_paths.dart';
@@ -17,6 +18,7 @@ class AppRouter {
       // refreshListenable: StreamListenable(authCubit.stream),
       routes: <RouteBase>[
         ...categoryRoutes,
+        ...productsRoute,
         GoRoute(
           path: RoutePaths.home,
           name: RoutePaths.homeName,

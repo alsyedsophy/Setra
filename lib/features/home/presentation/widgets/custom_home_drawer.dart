@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:setra/core/design_system/app_spacing.dart';
 import 'package:setra/core/extensions/context_extensions.dart';
+import 'package:setra/core/routing/routing.dart';
 
 class CustomHomeDrawer extends StatelessWidget {
   const CustomHomeDrawer({super.key});
@@ -32,7 +33,7 @@ class CustomHomeDrawer extends StatelessWidget {
           CustomDrawerListTile(
             icon: Icons.home,
             title: 'Home',
-            onTap: () => context.pop(),
+            onTap: () => context.goNamed(RoutePaths.homeName),
           ),
           CustomDrawerListTile(icon: Icons.person, title: 'Mens'),
           CustomDrawerListTile(icon: Icons.person, title: 'Kids'),

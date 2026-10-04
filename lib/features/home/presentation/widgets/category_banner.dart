@@ -6,11 +6,7 @@ import 'package:setra/core/widgets/app_network_image.dart';
 import 'package:setra/features/home/domain/entities/category_entity.dart';
 
 class CategoryBanner extends StatelessWidget {
-  const CategoryBanner({
-    super.key,
-    required this.category,
-    this.height,
-  });
+  const CategoryBanner({super.key, required this.category, this.height});
   final CategoryEntity category;
   final double? height;
 
@@ -19,7 +15,7 @@ class CategoryBanner extends StatelessWidget {
     return ClipRRect(
       borderRadius: AppSpacing.r_12.rAll,
       child: Stack(
-        fit: StackFit.expand,
+        fit: StackFit.loose,
         children: [
           AppNetworkImage(
             imageUrl: category.imageUrl,

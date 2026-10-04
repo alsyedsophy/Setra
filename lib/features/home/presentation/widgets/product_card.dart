@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:setra/core/design_system/design_system.dart';
 import 'package:setra/core/extensions/extensions.dart';
 import 'package:setra/core/extensions/num_extensions.dart';
+import 'package:setra/core/routing/route_paths.dart';
 import 'package:setra/core/widgets/app_network_image.dart';
 import 'package:setra/features/products/domain/entities/product_entity.dart';
 
@@ -28,7 +30,7 @@ class ProductCard extends StatelessWidget {
           ),
           AppSpacing.h_10.hSpace,
           Text(
-            productEntity.name,
+            productEntity.imageUrls.length.toString(),
             style: context.textTheme.bodyMedium,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -75,6 +77,11 @@ class ProductCard extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    ).onTap(
+      () => context.pushNamed(
+        RoutePaths.productsDetailsName,
+        extra: productEntity,
       ),
     );
   }

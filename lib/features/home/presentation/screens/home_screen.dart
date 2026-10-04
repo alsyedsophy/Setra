@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:setra/core/components/app_loading.dart';
 import 'package:setra/core/design_system/design_system.dart';
 import 'package:setra/core/extensions/extensions.dart';
 import 'package:setra/core/extensions/num_extensions.dart';
 import 'package:setra/core/responsive/responsive_layout.dart';
+import 'package:setra/core/routing/route_paths.dart';
 import 'package:setra/core/widgets/custom_app_bar.dart';
-import 'package:setra/features/products/domain/entities/product_entity.dart';
 import 'package:setra/features/home/presentation/cubit/home_cubit.dart';
 import 'package:setra/features/home/presentation/cubit/home_state.dart';
 import 'package:setra/features/home/presentation/widgets/banner_card.dart';
@@ -25,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<HomeCubit>().loadProductsByGender(ProductGender.men);
+    context.read<HomeCubit>().loadHomeData();
   }
 
   @override
@@ -47,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         builder: (context, state) {
           if (state.status == HomeStatus.loading) {
-            return const Center(child: CircularProgressIndicator());
+            return AppLoading();
           }
 
           return RefreshIndicator(
@@ -77,11 +79,20 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           CategorySection(),
-          TitleSection(title: 'New Arrivals', onTap: () {}),
-          ProductSectionCategory(categoryName: "newArrival", products: []),
+          TitleSection(
+            title: 'New Arrivals',
+            onTap: () => context.pushNamed(RoutePaths.productsName),
+          ),
+          ProductSectionCategory(
+            categoryName: "newArrival",
+            products: state.products,
+          ),
           AppSpacing.h_12.hSpace,
           TitleSection(title: 'Featured', onTap: () {}),
-          ProductSectionCategory(categoryName: "featured", products: []),
+          ProductSectionCategory(
+            categoryName: "featured",
+            products: state.products,
+          ),
           AppSpacing.h_50.hSpace,
         ],
       ),

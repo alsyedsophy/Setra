@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:setra/core/routing/routing.dart';
+import 'package:setra/features/products/domain/entities/product_entity.dart';
+import 'package:setra/features/products/presentation/screens/Product_details.dart';
+import 'package:setra/features/products/presentation/screens/products_screen.dart';
 
 List<RouteBase> get productsRoute => [
   GoRoute(
     path: RoutePaths.products,
     name: RoutePaths.productsName,
-    builder: (context, state) => _ProductsPlaceholderScreen(),
+    builder: (context, state) => ProductsScreen(),
   ),
   GoRoute(
     path: RoutePaths.productsDetails,
     name: RoutePaths.productsDetailsName,
     builder: (context, state) {
-      final productId = state.pathParameters['productId']!;
-      return _ProductsDetailPlaceholderScreen(productId: productId);
+      final productEntity = state.extra as ProductEntity;
+      return ProductDetails(productEntity: productEntity);
     },
   ),
 ];

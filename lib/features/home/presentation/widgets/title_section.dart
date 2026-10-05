@@ -77,8 +77,8 @@ Future<void> seedCategoryToFirebase() async {
   // بيانات تصنيف تجريبي مطابق تماماً للـ CategoryEntity
   final Map<String, dynamic> sampleCategory = {
     'id': 'cat_mens_clothing',
-    'name': 'ملابس رجالي',
-    'nameEn': 'Men Clothing',
+    'name': 'ملابس رجالى',
+    'nameEn': 'Mens Clothing',
     'description': 'تشكيلة واسعة من الملابس الرجالية العصرية والكاجوال.',
     'imageUrl': 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d',
     'displayOrder': 1,

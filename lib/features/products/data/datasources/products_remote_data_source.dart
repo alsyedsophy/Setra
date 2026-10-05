@@ -11,6 +11,7 @@ abstract class ProductsRemoteDataSource {
   });
 
   Future<ProductModel> getProductById(String id);
+  Future<List<ProductModel>> getProductsByCategory(String categoryId);
 
   Future<List<ProductModel>> getRelatedProducts(
     String productId, {
@@ -71,6 +72,21 @@ class ProductsRemoteDataSourceImpl implements ProductsRemoteDataSource {
       return products;
     } on FirebaseException catch (e) {
       throw _handleFirebaseException(e);
+    } catch (e) {
+      throw ServerException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<List<ProductModel>> getProductsByCategory(String categoryId) async {
+    try {
+      final snapshot = await firestore
+          .collection(_collection)
+          .where("categoryId", isEqualTo: categoryId)
+          .get();
+      return snapshot.docs
+          .map((doc) => ProductModel.fromFirestore(doc.data(), docId: doc.id))
+          .toList();
     } catch (e) {
       throw ServerException(message: e.toString());
     }

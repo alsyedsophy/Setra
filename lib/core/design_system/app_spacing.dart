@@ -74,6 +74,7 @@ class AppSpacing {
   static final double w_110 = 110.w;
   static final double w_128 = 128.w;
   static final double w_170 = 170.w;
+  static final double w_200 = 200.w;
   static final double w_256 = 256.w;
   static final double w_360 = 360.w;
   static final double w_600 = 600.w;

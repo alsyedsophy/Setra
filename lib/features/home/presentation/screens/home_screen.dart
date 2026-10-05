@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:setra/core/components/app_loading.dart';
 import 'package:setra/core/design_system/design_system.dart';
 import 'package:setra/core/extensions/extensions.dart';
 import 'package:setra/core/extensions/num_extensions.dart';
 import 'package:setra/core/responsive/responsive_layout.dart';
-import 'package:setra/core/routing/route_paths.dart';
 import 'package:setra/core/widgets/custom_app_bar.dart';
 import 'package:setra/features/home/presentation/cubit/home_cubit.dart';
 import 'package:setra/features/home/presentation/cubit/home_state.dart';
 import 'package:setra/features/home/presentation/widgets/banner_card.dart';
 import 'package:setra/features/home/presentation/widgets/category_section.dart';
 import 'package:setra/features/home/presentation/widgets/custom_home_drawer.dart';
-import 'package:setra/features/home/presentation/widgets/product_section_category.dart';
-import 'package:setra/features/home/presentation/widgets/title_section.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -72,27 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           BannerCard(banners: state.banners),
-          Center(
-            child: Text(
-              "Winter Collection",
-              style: context.textTheme.headlineMedium,
-            ),
-          ),
           CategorySection(),
-          TitleSection(
-            title: 'New Arrivals',
-            onTap: () => context.pushNamed(RoutePaths.productsName),
-          ),
-          ProductSectionCategory(
-            categoryName: "newArrival",
-            products: state.products,
-          ),
-          AppSpacing.h_12.hSpace,
-          TitleSection(title: 'Featured', onTap: () {}),
-          ProductSectionCategory(
-            categoryName: "featured",
-            products: state.products,
-          ),
           AppSpacing.h_50.hSpace,
         ],
       ),

@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:setra/core/errors/exceptions.dart';
 import 'package:setra/core/errors/failures.dart';
 import 'package:setra/core/network/network_info.dart';
+import 'package:setra/features/home/domain/usecases/get_products_by_category_use_case.dart';
 import 'package:setra/features/products/data/datasources/products_remote_data_source.dart';
 import 'package:setra/features/products/domain/entities/product_entity.dart';
 import 'package:setra/features/products/domain/entities/product_filter.dart';
@@ -27,6 +28,15 @@ class ProductsRepositoryImpl implements ProductsRepository {
   @override
   Future<Either<Failure, ProductEntity>> getProductById(String id) async {
     return _handleCall(() => _remoteDataSource.getProductById(id));
+  }
+
+  @override
+  Future<Either<Failure, List<ProductEntity>>> getProductsByCategory(
+    String categoryId,
+  ) async {
+    return _handleCall(
+      () => _remoteDataSource.getProductsByCategory(categoryId),
+    );
   }
 
   @override

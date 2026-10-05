@@ -1,11 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:setra/core/design_system/app_spacing.dart';
-import 'package:setra/core/extensions/extensions.dart';
-import 'package:setra/core/extensions/num_extensions.dart';
 import 'package:setra/features/home/presentation/cubit/home_cubit.dart';
 import 'package:setra/features/home/presentation/cubit/home_state.dart';
 import 'package:setra/features/home/presentation/widgets/category_banner.dart';
+import 'package:setra/features/home/presentation/widgets/product_category_list.dart';
 
 class CategorySection extends StatelessWidget {
   const CategorySection({super.key});
@@ -18,20 +18,24 @@ class CategorySection extends StatelessWidget {
           return const SizedBox.shrink();
         }
 
-        return Column(
-          children: [
-            if (state.categories.isNotEmpty)
-              CategoryBanner(category: state.categories.first),
-            AppSpacing.h_12.hSpace,
-            if (state.categories.length > 1)
-              Row(
-                children: [
-                  for (int i = 1; i < state.categories.length && i <= 2; i++)
-                    CategoryBanner(category: state.categories[i]).expanded,
-                ],
-              ),
-          ],
-        ).paddingHorizontal(AppSpacing.w_12);
+        return ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: state.categories.length,
+          itemBuilder: (context, index) {
+            log(state.categories.length.toString());
+            final category = state.categories[index];
+            return Column(
+              children: [
+                CategoryBanner(category: category),
+                ProductCategoryList(
+                  products: state.products,
+                  categoryId: category.id,
+                ),
+              ],
+            );
+          },
+        );
       },
     );
   }

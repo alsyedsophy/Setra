@@ -12,6 +12,10 @@ abstract class ProductsRepository {
 
   Future<Either<Failure, ProductEntity>> getProductById(String id);
 
+  Future<Either<Failure, List<ProductEntity>>> getProductsByCategory(
+    String categoryId,
+  );
+
   Future<Either<Failure, List<ProductEntity>>> getRelatedProducts(
     String productId, {
     int limit = 10,

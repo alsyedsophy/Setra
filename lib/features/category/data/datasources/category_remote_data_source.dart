@@ -8,6 +8,8 @@ abstract class CategoryRemoteDataSource {
   Future<List<CategoryModel>> getFeaturedCategories();
 
   Future<CategoryModel> getCategoryById(String id);
+
+  Future<List<CategoryModel>> getCategoriesForGender(String gender);
 }
 
 class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
@@ -78,6 +80,24 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
       throw _mapFirebaseException(e);
     } on ServerException {
       rethrow;
+    } catch (e) {
+      throw ServerException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<List<CategoryModel>> getCategoriesForGender(String gender) async {
+    try {
+      final snapshot = await firestore
+          .collection(_collection)
+          .where('gender', isEqualTo: gender)
+          .get();
+
+      return snapshot.docs
+          .map((doc) => CategoryModel.fromFirestore(doc.data(), docId: doc.id))
+          .toList();
+    } on FirebaseException catch (e) {
+      throw _mapFirebaseException(e);
     } catch (e) {
       throw ServerException(message: e.toString());
     }

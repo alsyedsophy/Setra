@@ -29,6 +29,13 @@ class CategoryRepositoryImpl implements CategoryRepository {
     return _handleCall(() => _remoteDataSource.getFeaturedCategories());
   }
 
+  @override
+  Future<Either<Failure, List<CategoryEntity>>> getCategoriesForGender(
+    String gender,
+  ) async {
+    return _handleCall(() => _remoteDataSource.getCategoriesForGender(gender));
+  }
+
   Future<Either<Failure, T>> _handleCall<T>(Future<T> Function() call) async {
     if (!await _networkInfo.isConnected) {
       return Left(NetworkFailure());

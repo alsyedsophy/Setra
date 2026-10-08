@@ -8,4 +8,8 @@ abstract class CategoryRepository {
   Future<Either<Failure, CategoryEntity>> getCategoryById(String categoryId);
 
   Future<Either<Failure, List<CategoryEntity>>> getFeaturedCategories();
+
+  Future<Either<Failure, List<CategoryEntity>>> getCategoriesForGender(
+    String gender,
+  );
 }

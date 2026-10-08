@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:setra/core/theme/theme_cubit.dart';
 import 'package:setra/features/auth/presentation/cubit/auth/auth_cubit.dart';
+import 'package:setra/features/category/presentation/cubit/category_cubit.dart';
 import 'package:setra/features/home/presentation/cubit/home_cubit.dart';
 import 'package:setra/features/products/presentation/cubit/products_cubit.dart';
 import 'package:setra/firebase_options.dart';
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => getIt<ThemeCubit>()..loadTheme()),
         BlocProvider(create: (context) => getIt<HomeCubit>()),
         BlocProvider(create: (context) => getIt<ProductsCubit>()),
+        BlocProvider(create: (context) => getIt<CategoryCubit>()),
       ],
       child: App(),
     );

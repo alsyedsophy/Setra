@@ -2,7 +2,6 @@ import 'package:dartz/dartz.dart';
 import 'package:setra/core/errors/exceptions.dart';
 import 'package:setra/core/errors/failures.dart';
 import 'package:setra/core/network/network_info.dart';
-import 'package:setra/features/home/domain/usecases/get_products_by_category_use_case.dart';
 import 'package:setra/features/products/data/datasources/products_remote_data_source.dart';
 import 'package:setra/features/products/domain/entities/product_entity.dart';
 import 'package:setra/features/products/domain/entities/product_filter.dart';

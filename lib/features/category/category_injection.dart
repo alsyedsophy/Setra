@@ -4,6 +4,7 @@ import 'package:setra/core/network/network_info.dart';
 import 'package:setra/features/category/data/datasources/category_remote_data_source.dart';
 import 'package:setra/features/category/data/repositories/category_repository_impl.dart';
 import 'package:setra/features/category/domain/repositories/category_repository.dart';
+import 'package:setra/features/category/domain/usecases/get_categories_for_gender_use_case.dart';
 import 'package:setra/features/category/domain/usecases/get_categories_use_case.dart';
 import 'package:setra/features/category/domain/usecases/get_category_by_id_use_case.dart';
 import 'package:setra/features/category/domain/usecases/get_featured_category.dart';
@@ -37,12 +38,17 @@ Future<void> registerCategory() async {
     () => GetFeaturedCategoriesUseCase(getIt<CategoryRepository>()),
   );
 
+  getIt.registerLazySingleton<GetCategoriesForGenderUseCase>(
+    () => GetCategoriesForGenderUseCase(getIt<CategoryRepository>()),
+  );
+
   // Cubits
   getIt.registerFactory<CategoryCubit>(
     () => CategoryCubit(
       getCategoriesUseCase: getIt<GetCategoriesUseCase>(),
       getCategoryByIdUseCase: getIt<GetCategoryByIdUseCase>(),
       getFeaturedCategoriesUseCase: getIt<GetFeaturedCategoriesUseCase>(),
+      getCategoriesForGenderUseCase: getIt<GetCategoriesForGenderUseCase>(),
     ),
   );
 }

@@ -4,19 +4,13 @@ import 'package:setra/core/design_system/app_spacing.dart';
 import 'package:setra/core/extensions/extensions.dart';
 import 'package:setra/core/widgets/app_empty_view.dart';
 import 'package:setra/core/widgets/app_error_view.dart';
-import 'package:setra/features/products/domain/entities/product_entity.dart';
 import 'package:setra/features/home/presentation/widgets/product_home_image.dart';
 import 'package:setra/features/products/domain/entities/product_filter.dart';
 import 'package:setra/features/products/presentation/cubit/products_cubit.dart';
 import 'package:setra/features/products/presentation/cubit/products_state.dart';
 
 class ProductCategoryList extends StatefulWidget {
-  const ProductCategoryList({
-    super.key,
-    required this.products,
-    required this.categoryId,
-  });
-  final List<ProductEntity> products;
+  const ProductCategoryList({super.key, required this.categoryId});
   final String categoryId;
 
   @override
@@ -34,10 +28,6 @@ class _ProductCategoryListState extends State<ProductCategoryList> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.products.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
     return BlocBuilder<ProductsCubit, ProductsState>(
       builder: (context, state) {
         // if (state.status == ProductsStatus.initial ||

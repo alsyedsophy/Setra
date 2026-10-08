@@ -2,17 +2,28 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:setra/features/home/presentation/cubit/home_cubit.dart';
-import 'package:setra/features/home/presentation/cubit/home_state.dart';
-import 'package:setra/features/home/presentation/widgets/category_banner.dart';
+import 'package:setra/features/category/presentation/cubit/category_cubit.dart';
+import 'package:setra/features/category/presentation/cubit/category_state.dart';
+import 'package:setra/features/home/presentation/widgets/category_home_banner.dart';
 import 'package:setra/features/home/presentation/widgets/product_category_list.dart';
 
-class CategorySection extends StatelessWidget {
+class CategorySection extends StatefulWidget {
   const CategorySection({super.key});
 
   @override
+  State<CategorySection> createState() => _CategorySectionState();
+}
+
+class _CategorySectionState extends State<CategorySection> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<CategoryCubit>().loadCategories();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeCubit, HomeState>(
+    return BlocBuilder<CategoryCubit, CategoryState>(
       builder: (context, state) {
         if (state.categories.isEmpty) {
           return const SizedBox.shrink();
@@ -27,11 +38,8 @@ class CategorySection extends StatelessWidget {
             final category = state.categories[index];
             return Column(
               children: [
-                CategoryBanner(category: category),
-                ProductCategoryList(
-                  products: state.products,
-                  categoryId: category.id,
-                ),
+                CategoryHomeBanner(category: category),
+                ProductCategoryList(categoryId: category.id),
               ],
             );
           },

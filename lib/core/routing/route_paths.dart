@@ -26,8 +26,11 @@ class RoutePaths {
   static const String categoryName = 'category';
   static const String categoryDetail = '/category/:categoryId';
   static const String categoryDetailName = 'category_detail';
+  static const String categoryProducts = 'category/products';
+  static const String categoryProductsName = 'category_products';
 
   // Products
+
   static const String products = '/products';
   static const String productsName = 'products';
 

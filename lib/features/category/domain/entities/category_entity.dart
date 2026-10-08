@@ -6,6 +6,7 @@ class CategoryEntity extends Equatable {
   final String? nameEn;
   final String? description;
   final String imageUrl;
+  final String gender;
   final int displayOrder;
   final bool isActive;
   final bool isFeatured;
@@ -19,6 +20,7 @@ class CategoryEntity extends Equatable {
     this.nameEn,
     this.description,
     required this.imageUrl,
+    required this.gender,
     this.displayOrder = 0,
     this.isActive = true,
     this.isFeatured = false,
@@ -38,6 +40,7 @@ class CategoryEntity extends Equatable {
     String? nameEn,
     String? description,
     String? imageUrl,
+    String? gender,
     int? displayOrder,
     bool? isActive,
     bool? isFeatured,
@@ -53,6 +56,7 @@ class CategoryEntity extends Equatable {
       nameEn: clearNameEn ? null : (nameEn ?? this.nameEn),
       description: clearDescription ? null : (description ?? this.description),
       imageUrl: imageUrl ?? this.imageUrl,
+      gender: gender ?? this.gender,
       displayOrder: displayOrder ?? this.displayOrder,
       isActive: isActive ?? this.isActive,
       isFeatured: isFeatured ?? this.isFeatured,
@@ -69,6 +73,7 @@ class CategoryEntity extends Equatable {
     nameEn,
     description,
     imageUrl,
+    gender,
     displayOrder,
     isActive,
     isFeatured,

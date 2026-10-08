@@ -35,8 +35,23 @@ class CustomHomeDrawer extends StatelessWidget {
             title: 'Home',
             onTap: () => context.goNamed(RoutePaths.homeName),
           ),
-          CustomDrawerListTile(icon: Icons.person, title: 'Mens'),
-          CustomDrawerListTile(icon: Icons.person, title: 'Kids'),
+          CustomDrawerListTile(
+            icon: Icons.person,
+            title: 'All Collections',
+            onTap: () => context.pushNamed(RoutePaths.productsName),
+          ),
+          CustomDrawerListTile(
+            icon: Icons.person,
+            title: 'Mens',
+            onTap: () =>
+                context.pushNamed(RoutePaths.categoryName, extra: 'men'),
+          ),
+          CustomDrawerListTile(
+            icon: Icons.person,
+            title: 'Kids',
+            onTap: () =>
+                context.pushNamed(RoutePaths.categoryName, extra: 'kids'),
+          ),
           CustomDrawerListTile(
             icon: Icons.local_offer,
             title: 'Summer Collection',

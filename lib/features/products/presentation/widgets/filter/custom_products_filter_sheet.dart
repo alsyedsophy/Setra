@@ -12,6 +12,10 @@ import 'package:setra/features/products/domain/entities/product_filter.dart';
 import 'package:setra/features/products/presentation/cubit/products_cubit.dart';
 import 'package:setra/features/products/presentation/cubit/products_state.dart';
 import 'package:setra/features/products/presentation/widgets/custom_header_sheet.dart';
+import 'package:setra/features/products/presentation/widgets/filter_custom_all_switch_tile.dart';
+import 'package:setra/features/products/presentation/widgets/filter_custom_string_all_chips.dart';
+import 'package:setra/features/products/presentation/widgets/filter_gender_chip.dart';
+import 'package:setra/features/products/presentation/widgets/filter_price_label.dart';
 import 'package:setra/features/products/presentation/widgets/section_title.dart';
 
 class CustomProductsFilterSheet extends StatefulWidget {
@@ -68,6 +72,39 @@ class _CustomProductsFilterSheetState extends State<CustomProductsFilterSheet> {
     setState(() => _draft = _draft.copyWith(tags: list));
   }
 
+  // تعريف الدوال المساعدة الواضحة في الـ Screen الرئيسية
+  void _toggleDiscount(bool value) {
+    setState(() {
+      _draft = value
+          ? _draft.copyWith(hasDiscountOnly: true)
+          : _draft.copyWith(clearHasDiscount: true);
+    });
+  }
+
+  void _toggleStock(bool value) {
+    setState(() {
+      _draft = value
+          ? _draft.copyWith(inStockOnly: true)
+          : _draft.copyWith(clearInStock: true);
+    });
+  }
+
+  void _toggleFeatured(bool value) {
+    setState(() {
+      _draft = value
+          ? _draft.copyWith(featuredOnly: true)
+          : _draft.copyWith(clearFeatured: true);
+    });
+  }
+
+  void _toggleNewArrival(bool value) {
+    setState(() {
+      _draft = value
+          ? _draft.copyWith(newArrivalOnly: true)
+          : _draft.copyWith(clearNewArrival: true);
+    });
+  }
+
   void _setGender(ProductGender? gender) {
     setState(() {
       _draft = gender == null
@@ -100,7 +137,7 @@ class _CustomProductsFilterSheetState extends State<CustomProductsFilterSheet> {
     });
   }
 
-  // =========== Build =========
+  // ====================== Build ========================
 
   @override
   Widget build(BuildContext context) {
@@ -121,11 +158,18 @@ class _CustomProductsFilterSheetState extends State<CustomProductsFilterSheet> {
                 AppSpacing.h_8.hSpace,
                 SectionTitle(title: "Gender"),
                 AppSpacing.h_8.hSpace,
-                _buildGenderChips(context),
+                // ================= Gender ====================
+                FilterGenderChip(
+                  draft: _draft,
+                  all: (_) => _setGender(null),
+                  men: (_) => _setGender(ProductGender.men),
+                  kids: (_) => _setGender(ProductGender.kids),
+                ),
                 AppSpacing.h_24.hSpace,
+                // ================= PRice Range ==============
                 SectionTitle(title: "Price Range"),
                 AppSpacing.h_4.hSpace,
-                _buildPriceLabel(context),
+                FilterPriceLabel(priceRange: _priceRange),
                 RangeSlider(
                   values: _priceRange,
                   min: ProductFilterOptions.minPrice,
@@ -145,75 +189,22 @@ class _CustomProductsFilterSheetState extends State<CustomProductsFilterSheet> {
                   }),
                 ),
                 AppSpacing.h_16.hSpace,
-                SectionTitle(title: "Quick Filters"),
-                AppSpacing.h_4.hSpace,
-                _buildSwitchTile(
-                  context,
-                  title: "On Sale",
-                  value: _draft.hasDiscountOnly ?? false,
-                  onChanged: (value) => setState(() {
-                    _draft = value
-                        ? _draft.copyWith(hasDiscountOnly: true)
-                        : _draft.copyWith(clearHasDiscount: true);
-                  }),
+                // ===================== All Switch Tile ========================
+                FilterCustomAllSwitchTitle(
+                  draft: _draft,
+                  toggleSale: _toggleDiscount,
+                  toggleStock: _toggleStock,
+                  toggleFeatured: _toggleFeatured,
+                  toggleNewArravile: _toggleNewArrival,
                 ),
-                _buildSwitchTile(
-                  context,
-                  title: "In Stock Only",
-                  value: _draft.inStockOnly ?? false,
-                  onChanged: (value) => setState(() {
-                    _draft = value
-                        ? _draft.copyWith(inStockOnly: true)
-                        : _draft.copyWith(clearInStock: true);
-                  }),
+                // ======================= All String Chips =====================
+                FilterCustomStringAllChips(
+                  draft: _draft,
+                  toggleSize: _toggleSize,
+                  toggleColor: _toggleColor,
+                  toggleTag: _toggleTag,
                 ),
-                _buildSwitchTile(
-                  context,
-                  title: 'Featured',
-                  value: _draft.featuredOnly ?? false,
-                  onChanged: (value) => setState(() {
-                    _draft = value
-                        ? _draft.copyWith(featuredOnly: true)
-                        : _draft.copyWith(clearFeatured: true);
-                  }),
-                ),
-                _buildSwitchTile(
-                  context,
-                  title: "New Arrivals",
-                  value: _draft.newArrivalOnly ?? false,
-                  onChanged: (value) => setState(() {
-                    _draft = value
-                        ? _draft.copyWith(newArrivalOnly: true)
-                        : _draft.copyWith(clearNewArrival: true);
-                  }),
-                ),
-                AppSpacing.h_24.hSpace,
-                SectionTitle(title: "Sizes"),
-                AppSpacing.h_8.hSpace,
-                _buildStringChip(
-                  context,
-                  values: ProductFilterOptions.sizes,
-                  selected: _draft.sizes,
-                  onTap: _toggleSize,
-                ),
-                AppSpacing.h_24.hSpace,
-                SectionTitle(title: "Colors"),
-                AppSpacing.h_8.hSpace,
-                _buildStringChip(
-                  context,
-                  values: ProductFilterOptions.colors,
-                  selected: _draft.colors,
-                  onTap: _toggleColor,
-                ),
-                AppSpacing.h_24.hSpace,
-                SectionTitle(title: "Tags"),
-                _buildStringChip(
-                  context,
-                  values: ProductFilterOptions.tags,
-                  selected: _draft.tags,
-                  onTap: _toggleTag,
-                ),
-                AppSpacing.h_24.hSpace,
+
                 SectionTitle(title: 'Brand'),
                 AppSpacing.h_8.hSpace,
                 AppTextField(
@@ -250,80 +241,6 @@ class _CustomProductsFilterSheetState extends State<CustomProductsFilterSheet> {
           onPressed: _apply,
         ).paddingHorizontal(AppSpacing.w_20);
       },
-    );
-  }
-
-  Widget _buildGenderChips(BuildContext context) {
-    return Wrap(
-      spacing: 8,
-      children: [
-        ChoiceChip(
-          label: Text("All"),
-          selected: _draft.gender == null,
-          onSelected: (_) => _setGender(null),
-        ),
-        ChoiceChip(
-          label: Text("Men"),
-          selected: _draft.gender == ProductGender.men,
-          onSelected: (_) => _setGender(ProductGender.men),
-        ),
-        ChoiceChip(
-          label: Text('Kids'),
-          selected: _draft.gender == ProductGender.kids,
-          onSelected: (_) => _setGender(ProductGender.kids),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPriceLabel(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          '${_priceRange.start.round()} EGP',
-          style: context.textTheme.bodyMedium,
-        ),
-        Text(
-          '${_priceRange.end.round()} EGP',
-          style: context.textTheme.bodyMedium,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSwitchTile(
-    BuildContext context, {
-    required String title,
-    required bool value,
-    required ValueChanged<bool> onChanged,
-  }) {
-    return SwitchListTile(
-      value: value,
-      onChanged: onChanged,
-      title: Text(title),
-      contentPadding: EdgeInsets.zero,
-      dense: true,
-    );
-  }
-
-  Widget _buildStringChip(
-    BuildContext context, {
-    required List<String> values,
-    required List<String> selected,
-    required ValueChanged<String> onTap,
-  }) {
-    return Wrap(
-      spacing: 8,
-      runSpacing: 4,
-      children: values.map((v) {
-        final isSelected = selected.contains(v);
-        return FilterChip(
-          label: Text(v),
-          selected: isSelected,
-          onSelected: (_) => onTap(v),
-        );
-      }).toList(),
     );
   }
 }

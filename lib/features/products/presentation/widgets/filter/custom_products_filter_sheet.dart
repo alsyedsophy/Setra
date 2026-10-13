@@ -12,10 +12,10 @@ import 'package:setra/features/products/domain/entities/product_filter.dart';
 import 'package:setra/features/products/presentation/cubit/products_cubit.dart';
 import 'package:setra/features/products/presentation/cubit/products_state.dart';
 import 'package:setra/features/products/presentation/widgets/custom_header_sheet.dart';
-import 'package:setra/features/products/presentation/widgets/filter_custom_all_switch_tile.dart';
-import 'package:setra/features/products/presentation/widgets/filter_custom_string_all_chips.dart';
-import 'package:setra/features/products/presentation/widgets/filter_gender_chip.dart';
-import 'package:setra/features/products/presentation/widgets/filter_price_label.dart';
+import 'package:setra/features/products/presentation/widgets/filter/filter_custom_all_switch_tile.dart';
+import 'package:setra/features/products/presentation/widgets/filter/filter_custom_string_all_chips.dart';
+import 'package:setra/features/products/presentation/widgets/filter/filter_gender_chip.dart';
+import 'package:setra/features/products/presentation/widgets/filter/filter_price_label.dart';
 import 'package:setra/features/products/presentation/widgets/section_title.dart';
 
 class CustomProductsFilterSheet extends StatefulWidget {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:setra/core/design_system/app_spacing.dart';
 import 'package:setra/core/extensions/num_extensions.dart';
 import 'package:setra/features/products/domain/entities/product_filter.dart';
-import 'package:setra/features/products/presentation/widgets/filter_switch_tile.dart';
+import 'package:setra/features/products/presentation/widgets/filter/filter_switch_tile.dart';
 import 'package:setra/features/products/presentation/widgets/section_title.dart';
 
 class FilterCustomAllSwitchTitle extends StatelessWidget {

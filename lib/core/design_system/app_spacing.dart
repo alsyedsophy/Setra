@@ -41,6 +41,7 @@ class AppSpacing {
   static final double h_223 = 223.h;
   static final double h_230 = 230.h;
   static final double h_248 = 248.h;
+  static final double h_260 = 260.h;
   static final double h_300 = 300.h;
 
   static final double h_306 = 306.h;
@@ -64,6 +65,7 @@ class AppSpacing {
   static final double w_18 = 18.w;
   static final double w_20 = 20.w;
   static final double w_24 = 24.w;
+  static final double w_32 = 32.w;
   static final double w_40 = 40.w;
   static final double w_48 = 48.w;
   static final double w_56 = 56.w;

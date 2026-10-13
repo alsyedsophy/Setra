@@ -6,7 +6,7 @@ import 'package:setra/features/products/domain/entities/product_entity.dart';
 import 'package:setra/features/products/domain/products_domain.dart';
 import 'package:setra/features/products/presentation/cubit/products_cubit.dart';
 import 'package:setra/features/products/presentation/screens/Product_details.dart';
-import 'package:setra/features/products/presentation/screens/products_category_screen.dart';
+import 'package:setra/features/category/presentation/screens/products_category_screen.dart';
 import 'package:setra/features/products/presentation/screens/products_list_screen.dart';
 
 List<RouteBase> get productsRoute => [

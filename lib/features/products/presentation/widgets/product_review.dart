@@ -11,13 +11,17 @@ class ProductReview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double starSize = context.responsive(
+      mobile: AppSpacing.s_20,
+      desktop: AppSpacing.s_25,
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text("REVIEWS", style: context.textTheme.bodySmall),
         AppSpacing.h_6.hSpace,
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        Wrap(
+          alignment: WrapAlignment.spaceBetween,
           children: [
             Text(
               "Review Count: $reviewCount",
@@ -29,7 +33,7 @@ class ProductReview extends StatelessWidget {
                 ...List.generate(5, (index) {
                   return Icon(
                     _getStarIcon(index, rating),
-                    size: AppSpacing.s_20,
+                    size: starSize,
                     color: index < rating ? Colors.amber : Colors.grey.shade300,
                   );
                 }),
@@ -38,7 +42,7 @@ class ProductReview extends StatelessWidget {
           ],
         ),
       ],
-    ).paddingHorizontal(AppSpacing.w_16);
+    );
   }
 
   IconData _getStarIcon(int index, double currentRating) {

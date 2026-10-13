@@ -17,11 +17,22 @@ class _ProductColorsState extends State<ProductColors> {
   int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
+    // 🎯 حجم الدائرة والمسافة بين الدوائر
+    final double gap = context.responsive(
+      mobile: AppSpacing.w_10,
+      desktop: AppSpacing.w_12,
+    );
+    final double labelGap = context.responsive(
+      mobile: AppSpacing.h_6,
+      desktop: AppSpacing.h_8,
+    );
     return Column(
       children: [
         Text("Colors", style: context.textTheme.bodySmall),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+        labelGap.hSpace,
+        Wrap(
+          spacing: gap,
+          runSpacing: gap,
           children: List.generate(widget.colors.length, (index) {
             final isSelected = _selectedIndex == index;
             final colorsHex = widget.colors[index];
@@ -31,7 +42,6 @@ class _ProductColorsState extends State<ProductColors> {
                   _selectedIndex = index;
                 });
                 widget.onColorSeleted?.call(widget.colors[index]);
-                log(_selectedIndex.toString());
               },
               child: Container(
                 margin: AppSpacing.w_10.mRight,
@@ -52,7 +62,7 @@ class _ProductColorsState extends State<ProductColors> {
           }),
         ),
       ],
-    ).paddingHorizontal(AppSpacing.w_16);
+    );
   }
 }
 
@@ -63,9 +73,13 @@ class ColorCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double size = context.responsive(
+      mobile: AppSpacing.h_32,
+      desktop: AppSpacing.h_40,
+    );
     return Container(
-      height: AppSpacing.h_32,
-      width: AppSpacing.h_32,
+      height: size,
+      width: size,
       // padding: AppSpacing.r_4.pAll,
       decoration: BoxDecoration(
         color: _parseColor(colorsHex),
@@ -82,8 +96,8 @@ class ColorCircle extends StatelessWidget {
         cleaned = 'FF$cleaned'; // نضيف الشفافية
       }
       return Color(int.parse(cleaned, radix: 16));
-    } catch (e) {
-      return Colors.grey; // لون احتياطي لو الكود غلط
+    } catch (_) {
+      return Colors.grey;
     }
   }
 }

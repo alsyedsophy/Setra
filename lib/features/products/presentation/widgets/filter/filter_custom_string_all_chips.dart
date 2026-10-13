@@ -3,7 +3,7 @@ import 'package:setra/core/constants/product_filter_options.dart';
 import 'package:setra/core/design_system/app_spacing.dart';
 import 'package:setra/core/extensions/num_extensions.dart';
 import 'package:setra/features/products/domain/entities/product_filter.dart';
-import 'package:setra/features/products/presentation/widgets/filter_string_chip.dart';
+import 'package:setra/features/products/presentation/widgets/filter/filter_string_chip.dart';
 import 'package:setra/features/products/presentation/widgets/section_title.dart';
 
 class FilterCustomStringAllChips extends StatelessWidget {

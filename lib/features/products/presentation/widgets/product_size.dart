@@ -16,13 +16,26 @@ class _ProductSizeState extends State<ProductSize> {
   int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
+    final double buttonWidth = context.responsive(
+      mobile: AppSpacing.w_56,
+      desktop: AppSpacing.w_64,
+    );
+    final double buttonHeight = context.responsive(
+      mobile: AppSpacing.h_40,
+      desktop: AppSpacing.h_48,
+    );
+    final double gap = context.responsive(
+      mobile: AppSpacing.w_10,
+      desktop: AppSpacing.w_12,
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text("Size", style: context.textTheme.labelMedium),
         AppSpacing.h_6.hSpace,
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+        Wrap(
+          spacing: gap,
+          runSpacing: gap,
           children: List.generate(widget.sizes.length, (index) {
             final size = widget.sizes[index];
             final isSelected = _selectedIndex == index;
@@ -35,8 +48,8 @@ class _ProductSizeState extends State<ProductSize> {
               },
               child: Container(
                 margin: AppSpacing.w_10.pRight,
-                height: AppSpacing.h_40,
-                width: AppSpacing.w_56,
+                height: buttonHeight,
+                width: buttonWidth,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: isSelected
@@ -60,6 +73,6 @@ class _ProductSizeState extends State<ProductSize> {
           }),
         ),
       ],
-    ).paddingHorizontal(AppSpacing.w_16);
+    );
   }
 }

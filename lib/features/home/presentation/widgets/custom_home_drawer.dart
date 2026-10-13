@@ -33,12 +33,18 @@ class CustomHomeDrawer extends StatelessWidget {
           CustomDrawerListTile(
             icon: Icons.home,
             title: 'Home',
-            onTap: () => context.goNamed(RoutePaths.homeName),
+            onTap: () {
+              context.pop();
+              context.goNamed(RoutePaths.homeName);
+            },
           ),
           CustomDrawerListTile(
             icon: Icons.person,
             title: 'All Collections',
-            onTap: () => context.pushNamed(RoutePaths.productsName),
+            onTap: () {
+              context.pop();
+              context.pushNamed(RoutePaths.productsName);
+            },
           ),
           CustomDrawerListTile(
             icon: Icons.person,

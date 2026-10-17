@@ -36,6 +36,7 @@ class _CategorySectionState extends State<CategorySection> {
           itemBuilder: (context, index) {
             log(state.categories.length.toString());
             final category = state.categories[index];
+            log(category.id);
             return Column(
               children: [
                 CategoryHomeBanner(category: category),

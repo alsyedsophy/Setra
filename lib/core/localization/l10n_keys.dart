@@ -56,6 +56,8 @@ class L10nKeys {
   static const String viewAll = "viewAll";
   static const String addToCart = "addToCart";
   static const String addToFavorites = "addToFavorites";
+  static const String removeFromFavorites = "removeFromFavorites";
+  static const String noFavorites = "noFavorites";
   static const String price = "price";
   static const String discount = "discount";
 }

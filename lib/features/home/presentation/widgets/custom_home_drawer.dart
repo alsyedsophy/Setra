@@ -66,8 +66,23 @@ class CustomHomeDrawer extends StatelessWidget {
             icon: Icons.local_offer_sharp,
             title: 'Winter Collection',
           ),
+          CustomDrawerListTile(
+            icon: Icons.favorite,
+            title: 'Favorites',
+            onTap: () {
+              context.pop();
+              context.pushNamed(RoutePaths.favoritesName);
+            },
+          ),
           CustomDrawerListTile(icon: Icons.local_offer_sharp, title: 'Offers'),
-          CustomDrawerListTile(icon: Icons.person, title: 'Profile'),
+          CustomDrawerListTile(
+            icon: Icons.person,
+            title: 'Profile',
+            onTap: () {
+              context.pop();
+              context.go(RoutePaths.loginName);
+            },
+          ),
           CustomDrawerListTile(icon: Icons.logout, title: 'Logout'),
         ],
       ),

@@ -48,6 +48,8 @@
   "viewAll" : "عرض الكل",
   "addToCart" : "أضف للسلة",
   "addToFavorites" : "أضف للمفضلة",
+  "removeFromFavorites" : "أزل من المفضلة",
+  "noFavorites" : "لا توجد مفضلة حتى الآن",
   "price" : "السعر",
   "discount" : "خصم"
 }

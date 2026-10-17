@@ -42,7 +42,7 @@ class ResendSection extends StatelessWidget {
                       ],
                     ),
                   ).onTap(
-                    () => isFinished
+                    isFinished
                         ? () {
                             context.read<AuthCubit>().sendEmailVerification();
 

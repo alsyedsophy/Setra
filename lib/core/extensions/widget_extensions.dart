@@ -24,7 +24,7 @@ extension WidgetExtensions on Widget {
     child: this,
   );
 
-  Widget onTap(VoidCallback onTap) => GestureDetector(
+  Widget onTap(VoidCallback? onTap) => GestureDetector(
     onTap: onTap,
     behavior: HitTestBehavior.opaque,
     child: this,

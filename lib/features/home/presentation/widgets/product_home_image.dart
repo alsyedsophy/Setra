@@ -5,6 +5,8 @@ import 'package:setra/core/extensions/extensions.dart';
 import 'package:setra/core/extensions/num_extensions.dart';
 import 'package:setra/core/routing/route_paths.dart';
 import 'package:setra/core/widgets/app_network_image.dart';
+import 'package:setra/features/favorites/domain/entities/favorite_entity.dart';
+import 'package:setra/features/favorites/presentation/widgets/favorite_button.dart';
 import 'package:setra/features/products/domain/entities/product_entity.dart';
 
 class ProductHomeImage extends StatelessWidget {
@@ -15,13 +17,38 @@ class ProductHomeImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: AppSpacing.w_200,
-      child: ClipRRect(
-        borderRadius: AppSpacing.r_12.rAll,
-        child: AppNetworkImage(
-          imageUrl: productEntity.mainImage,
-          fit: BoxFit.cover,
-          height: AppSpacing.h_300,
-        ),
+      child: Stack(
+        children: [
+          ClipRRect(
+            borderRadius: AppSpacing.r_12.rAll,
+            child: AppNetworkImage(
+              imageUrl: productEntity.mainImage,
+              fit: BoxFit.cover,
+              height: AppSpacing.h_300,
+            ),
+          ),
+          Positioned(
+            top: 8,
+            right: 8,
+            child: FavoriteButton(
+              item: FavoriteItem(
+                productId: productEntity.id,
+                name: productEntity.name,
+                imageUrl: productEntity.mainImage,
+                price: productEntity.price,
+                addedAt: DateTime.now(),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 8,
+            left: 8,
+            child: Text(
+              productEntity.categoryId,
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
       ),
     ).onTap(
       () => context.pushNamed(

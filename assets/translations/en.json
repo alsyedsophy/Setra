@@ -48,6 +48,8 @@
   "viewAll" : "View All",
   "addToCart" : "Add to Cart",
   "addToFavorites" : "Add to Favorites",
+  "removeFromFavorites" : "Remove from Favorites",
+  "noFavorites" : "No favorites yet",
   "price" : "Price",
   "discount" : "Discount"
 }

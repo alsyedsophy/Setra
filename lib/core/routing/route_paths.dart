@@ -36,4 +36,8 @@ class RoutePaths {
 
   static const String productsDetails = '/products/details';
   static const String productsDetailsName = 'products_details';
+
+  // Favorites
+  static const String favorites = '/favorites';
+  static const String favoritesName = 'favorites';
 }

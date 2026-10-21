@@ -40,4 +40,8 @@ class RoutePaths {
   // Favorites
   static const String favorites = '/favorites';
   static const String favoritesName = 'favorites';
+
+  // Cart
+  static const String cart = '/cart';
+  static const String cartName = 'cart';
 }

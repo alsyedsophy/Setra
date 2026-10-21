@@ -59,12 +59,20 @@ class ProductsRemoteDataSourceImpl implements ProductsRemoteDataSource {
       if (filter != null) {
         if (filter.sizes.isNotEmpty) {
           products = products
-              .where((p) => p.availableSizes.any(filter.sizes.contains))
+              .where(
+                (p) => p.variants.any(
+                  (variant) => filter.sizes.contains(variant.sizes.first.size),
+                ),
+              )
               .toList();
         }
         if (filter.colors.isNotEmpty) {
           products = products
-              .where((p) => p.availableColors.any(filter.colors.contains))
+              .where(
+                (p) => p.variants.any(
+                  (variant) => filter.colors.contains(variant.color),
+                ),
+              )
               .toList();
         }
       }

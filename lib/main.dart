@@ -6,6 +6,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:setra/core/dependency_injection/service_locator.dart';
 import 'package:setra/core/theme/theme_cubit.dart';
 import 'package:setra/features/auth/presentation/cubit/auth/auth_cubit.dart';
+import 'package:setra/features/cart/presentation/cubits/cart_cubit.dart';
 import 'package:setra/features/category/presentation/cubit/category_cubit.dart';
 import 'package:setra/features/favorites/presentation/cubit/favorites_cubit.dart';
 import 'package:setra/features/home/presentation/cubit/home_cubit.dart';
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => getIt<ProductsCubit>()),
         BlocProvider(create: (context) => getIt<CategoryCubit>()),
         BlocProvider(create: (context) => getIt<FavoritesCubit>()),
+        BlocProvider(create: (context) => getIt<CartCubit>()),
       ],
       child: App(),
     );

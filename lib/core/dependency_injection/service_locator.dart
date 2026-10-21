@@ -2,6 +2,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get_it/get_it.dart';
 import 'package:setra/core/network/network_info.dart';
 import 'package:setra/features/auth/auth_injection.dart';
+import 'package:setra/features/cart/cart_injection.dart';
 import 'package:setra/features/category/category_injection.dart';
 import 'package:setra/features/favorites/favorite_injection.dart';
 import 'package:setra/features/home/home_injection.dart';
@@ -53,4 +54,7 @@ Future<void> initCore() async {
 
   //? ============ Favorites ==============
   await registerFavorites();
+
+  //? ============ Favorites ==============
+  await registerCart();
 }

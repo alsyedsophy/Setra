@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:setra/features/products/data/models/product_variant_model.dart';
 import 'package:setra/features/products/domain/entities/product_entity.dart';
 
 class ProductModel extends ProductEntity {
@@ -15,8 +16,7 @@ class ProductModel extends ProductEntity {
     required super.gender,
     required super.brand,
     required super.tags,
-    required super.availableSizes,
-    required super.availableColors,
+    required super.variants,
     required super.newArrival,
     required super.featured,
     required super.stock,
@@ -43,12 +43,15 @@ class ProductModel extends ProductEntity {
       gender: _parseGender(map['gender'] as String?),
       brand: map['brand'] as String? ?? '',
       tags: List<String>.from(map['tags'] as List? ?? const []),
-      availableSizes: List<String>.from(
-        map['availableSizes'] as List? ?? const [],
-      ),
-      availableColors: List<String>.from(
-        map['availableColors'] as List? ?? const [],
-      ),
+      variants:
+          (map['variants'] as List<dynamic>?)
+              ?.map(
+                (variantMap) => ProductsVariantModel.fromJson(
+                  variantMap as Map<String, dynamic>,
+                ),
+              )
+              .toList() ??
+          [],
       newArrival: map['newArrival'] as bool? ?? false,
       featured: map['featured'] as bool? ?? false,
       stock: _toInt(map['stock']),
@@ -73,8 +76,9 @@ class ProductModel extends ProductEntity {
       'gender': gender.name,
       'brand': brand,
       'tags': tags,
-      'availableSizes': availableSizes,
-      'availableColors': availableColors,
+      'variants': variants
+          .map((v) => ProductsVariantModel.fromEntity(v).toJson())
+          .toList(),
       'newArrival': newArrival,
       'featured': featured,
       'stock': stock,
@@ -99,8 +103,9 @@ class ProductModel extends ProductEntity {
       gender: entity.gender,
       brand: entity.brand,
       tags: entity.tags,
-      availableSizes: entity.availableSizes,
-      availableColors: entity.availableColors,
+      variants: entity.variants
+          .map((variant) => ProductsVariantModel.fromEntity(variant))
+          .toList(),
       newArrival: entity.newArrival,
       featured: entity.featured,
       stock: entity.stock,

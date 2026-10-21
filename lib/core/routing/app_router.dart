@@ -7,6 +7,7 @@ import 'package:setra/core/routing/stream_listenable.dart';
 import 'package:setra/features/auth/auth_routes.dart';
 import 'package:setra/features/auth/presentation/cubit/auth/auth_cubit.dart';
 import 'package:setra/features/auth/presentation/cubit/auth/auth_state.dart';
+import 'package:setra/features/cart/cart_route.dart';
 import 'package:setra/features/category/category_routes.dart';
 import 'package:setra/features/favorites/favorites_routes.dart';
 import 'package:setra/features/home/presentation/screens/home_screen.dart';
@@ -29,6 +30,7 @@ class AppRouter {
         ...productsRoute,
         ...favoritesRoute,
         ...authRoutes,
+        ...cartRoutes,
         GoRoute(
           path: RoutePaths.home,
           name: RoutePaths.homeName,
@@ -52,7 +54,11 @@ class AppRouter {
         final bool isVerifyRoute = location == RoutePaths.verifyEmail;
 
         final bool isHomeRoute =
-            location == RoutePaths.home || location == RoutePaths.favorites;
+            location == RoutePaths.home ||
+            location == RoutePaths.favorites ||
+            location == RoutePaths.category ||
+            location == RoutePaths.products ||
+            location == RoutePaths.productsDetails;
 
         if (authState.status == AuthStatus.initial ||
             (authState.status == AuthStatus.loading && isSplash)) {

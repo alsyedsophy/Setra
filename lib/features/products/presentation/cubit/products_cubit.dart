@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:setra/features/products/domain/entities/product_filter.dart';
 import 'package:setra/features/products/domain/entities/product_sort.dart';
+import 'package:setra/features/products/domain/products_domain.dart';
 import 'package:setra/features/products/domain/usecases/get_products_use_case.dart';
 import 'package:setra/features/products/domain/usecases/get_related_products_use_case.dart';
 import 'package:setra/features/products/presentation/cubit/products_state.dart';
@@ -8,9 +9,13 @@ import 'package:setra/features/products/presentation/cubit/products_state.dart';
 class ProductsCubit extends Cubit<ProductsState> {
   final GetProductsUseCase _getProducts;
   final GetRelatedProductsUseCase _getRelatedProducts;
+  final GetProductByIdUseCase _getProductById;
 
-  ProductsCubit(this._getProducts, this._getRelatedProducts)
-    : super(const ProductsState());
+  ProductsCubit(
+    this._getProducts,
+    this._getRelatedProducts,
+    this._getProductById,
+  ) : super(const ProductsState());
 
   Future<void> loadProducts() async {
     emit(state.copyWith(status: ProductsStatus.loading, clearError: true));
@@ -53,6 +58,23 @@ class ProductsCubit extends Cubit<ProductsState> {
     await applyFilter(newFilter);
   }
 
+  Future<void> getProductById(String productId) async {
+    final result = await _getProductById(productId);
+    result.fold(
+      (failure) {
+        emit(
+          state.copyWith(
+            status: ProductsStatus.failure,
+            errorMessage: failure.message,
+          ),
+        );
+      },
+      (product) {
+        emit(state.copyWith(productById: product, clearError: true));
+      },
+    );
+  }
+
   Future<void> getRelatedProducts(String productId, {int limit = 10}) async {
     final result = await _getRelatedProducts(productId, limit: limit);
 
@@ -61,7 +83,7 @@ class ProductsCubit extends Cubit<ProductsState> {
         emit(state.copyWith(errorMessage: failure.message));
       },
       (related) {
-        emit(state.copyWith(relatedProducts: related));
+        emit(state.copyWith(relatedProducts: related, clearError: true));
       },
     );
   }

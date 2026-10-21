@@ -4,9 +4,14 @@ import 'package:setra/core/extensions/num_extensions.dart';
 import 'package:setra/core/widgets/widgets.dart';
 
 class ProductImagePage extends StatefulWidget {
-  const ProductImagePage({super.key, required this.images});
+  const ProductImagePage({
+    super.key,
+    required this.images,
+    required this.targetIndex,
+  });
 
   final List<String> images;
+  final int targetIndex;
 
   @override
   State<ProductImagePage> createState() => _ProductImagePageState();
@@ -14,12 +19,28 @@ class ProductImagePage extends StatefulWidget {
 
 class _ProductImagePageState extends State<ProductImagePage> {
   late final PageController _pageController;
-  int _currentPage = 0;
+  late int _currentPage;
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController();
+    _currentPage = widget.targetIndex;
+    _pageController = PageController(initialPage: widget.targetIndex);
+  }
+
+  @override
+  void didUpdateWidget(covariant ProductImagePage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.targetIndex != widget.targetIndex) {
+      _currentPage = widget.targetIndex;
+      if (_pageController.hasClients) {
+        _pageController.animateToPage(
+          _currentPage,
+          duration: Duration(milliseconds: 400),
+          curve: Curves.easeInOut,
+        );
+      }
+    }
   }
 
   @override
@@ -30,6 +51,12 @@ class _ProductImagePageState extends State<ProductImagePage> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.images.isEmpty) {
+      return SizedBox(
+        height: AppSpacing.h_400,
+        child: const Center(child: Icon(Icons.image_not_supported_outlined)),
+      );
+    }
     return SizedBox(
       height: AppSpacing.h_400,
       width: double.infinity,

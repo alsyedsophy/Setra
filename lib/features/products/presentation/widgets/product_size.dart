@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:setra/core/design_system/app_spacing.dart';
 import 'package:setra/core/extensions/extensions.dart';
 import 'package:setra/core/extensions/num_extensions.dart';
+import 'package:setra/features/products/domain/entities/products_variant.dart';
 
-class ProductSize extends StatefulWidget {
-  const ProductSize({super.key, required this.sizes, this.onSelectedSize});
-  final List<String> sizes;
-  final ValueChanged<String>? onSelectedSize;
+class ProductSize extends StatelessWidget {
+  const ProductSize({
+    super.key,
+    required this.sizes,
+    this.selectedSize,
+    this.onSelectedSize,
+  });
+  final List<VariantSize> sizes;
+  final VariantSize? selectedSize;
+  final ValueChanged<VariantSize>? onSelectedSize;
 
-  @override
-  State<ProductSize> createState() => _ProductSizeState();
-}
-
-class _ProductSizeState extends State<ProductSize> {
-  int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
     final double buttonWidth = context.responsive(
@@ -36,41 +37,42 @@ class _ProductSizeState extends State<ProductSize> {
         Wrap(
           spacing: gap,
           runSpacing: gap,
-          children: List.generate(widget.sizes.length, (index) {
-            final size = widget.sizes[index];
-            final isSelected = _selectedIndex == index;
+          children: sizes.map((size) {
+            final isEnable = size.isActive && size.stock > 0;
+            final isSelected =
+                selectedSize != null && size.id == selectedSize!.id;
             return GestureDetector(
-              onTap: () {
-                setState(() {
-                  _selectedIndex = index;
-                });
-                widget.onSelectedSize?.call(widget.sizes[index]);
-              },
-              child: Container(
-                margin: AppSpacing.w_10.pRight,
-                height: buttonHeight,
-                width: buttonWidth,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: isSelected
-                      ? context.colorScheme.primary
-                      : Colors.transparent,
-                  shape: BoxShape.rectangle,
-                  borderRadius: AppSpacing.r_2.rAll,
-                  border: Border.all(
-                    color: context.colorScheme.primary,
-                    width: 0.6,
+              onTap: isEnable ? () => onSelectedSize?.call(size) : null,
+              child: Opacity(
+                opacity: isEnable ? 1 : 0.35,
+                child: Container(
+                  margin: AppSpacing.w_10.pRight,
+                  height: buttonHeight,
+                  width: buttonWidth,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: isSelected && isEnable
+                        ? context.colorScheme.primary
+                        : Colors.transparent,
+                    shape: BoxShape.rectangle,
+                    borderRadius: AppSpacing.r_2.rAll,
+                    border: Border.all(
+                      color: context.colorScheme.primary,
+                      width: 0.6,
+                    ),
                   ),
-                ),
-                child: Text(
-                  size,
-                  style: context.textTheme.bodySmall!.copyWith(
-                    color: isSelected ? context.colorScheme.onPrimary : null,
+                  child: Text(
+                    size.size,
+                    style: context.textTheme.bodySmall!.copyWith(
+                      color: isSelected && isEnable
+                          ? context.colorScheme.onPrimary
+                          : null,
+                    ),
                   ),
                 ),
               ),
             );
-          }),
+          }).toList(),
         ),
       ],
     );

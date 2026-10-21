@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:setra/features/products/domain/entities/products_variant.dart';
 
 enum ProductGender { men, kids }
 
@@ -15,8 +16,7 @@ class ProductEntity extends Equatable {
   final ProductGender gender;
   final String brand;
   final List<String> tags;
-  final List<String> availableSizes;
-  final List<String> availableColors;
+  final List<ProductsVariant> variants;
   final bool newArrival;
   final bool featured;
   final int stock;
@@ -38,8 +38,7 @@ class ProductEntity extends Equatable {
     required this.gender,
     required this.brand,
     required this.tags,
-    required this.availableSizes,
-    required this.availableColors,
+    required this.variants,
     required this.newArrival,
     required this.featured,
     required this.stock,
@@ -62,8 +61,7 @@ class ProductEntity extends Equatable {
     required ProductGender gender,
     required String brand,
     List<String> tags = const [],
-    required List<String> availableSizes,
-    required List<String> availableColors,
+    required List<ProductsVariant> variants,
     bool newArrival = false,
     bool featured = false,
     required int stock,
@@ -94,8 +92,7 @@ class ProductEntity extends Equatable {
       gender: gender,
       brand: brand,
       tags: tags,
-      availableSizes: availableSizes,
-      availableColors: availableColors,
+      variants: variants,
       newArrival: newArrival,
       featured: featured,
       stock: stock,
@@ -132,8 +129,7 @@ class ProductEntity extends Equatable {
     ProductGender? gender,
     String? brand,
     List<String>? tags,
-    List<String>? availableSizes,
-    List<String>? availableColors,
+    List<ProductsVariant>? variants,
     bool? newArrival,
     bool? featured,
     int? stock,
@@ -155,8 +151,7 @@ class ProductEntity extends Equatable {
       gender: gender ?? this.gender,
       brand: brand ?? this.brand,
       tags: tags ?? this.tags,
-      availableSizes: availableSizes ?? this.availableSizes,
-      availableColors: availableColors ?? this.availableColors,
+      variants: variants ?? this.variants,
       newArrival: newArrival ?? this.newArrival,
       featured: featured ?? this.featured,
       stock: stock ?? this.stock,
@@ -181,8 +176,7 @@ class ProductEntity extends Equatable {
     gender,
     brand,
     tags,
-    availableSizes,
-    availableColors,
+    variants,
     newArrival,
     featured,
     stock,

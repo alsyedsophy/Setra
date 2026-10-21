@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:setra/core/design_system/app_spacing.dart';
 import 'package:setra/core/extensions/extensions.dart';
 import 'package:setra/core/extensions/num_extensions.dart';
+import 'package:setra/features/products/domain/entities/products_variant.dart';
 
-class ProductColors extends StatefulWidget {
-  const ProductColors({super.key, required this.colors, this.onColorSeleted});
-  final List<String> colors;
-  final ValueChanged<String>? onColorSeleted;
-  @override
-  State<ProductColors> createState() => _ProductColorsState();
-}
-
-class _ProductColorsState extends State<ProductColors> {
-  int _selectedIndex = 0;
+class ProductColors extends StatelessWidget {
+  const ProductColors({
+    super.key,
+    required this.variants,
+    required this.selectedVariant,
+    this.onVariantSelected,
+  });
+  final List<ProductsVariant> variants;
+  final ProductsVariant selectedVariant;
+  final ValueChanged<ProductsVariant>? onVariantSelected;
   @override
   Widget build(BuildContext context) {
     // 🎯 حجم الدائرة والمسافة بين الدوائر
@@ -31,19 +32,15 @@ class _ProductColorsState extends State<ProductColors> {
         Wrap(
           spacing: gap,
           runSpacing: gap,
-          children: List.generate(widget.colors.length, (index) {
-            final isSelected = _selectedIndex == index;
-            final colorsHex = widget.colors[index];
+          children: variants.map((variant) {
+            final isSelected = selectedVariant.id == variant.id;
             return GestureDetector(
               onTap: () {
-                setState(() {
-                  _selectedIndex = index;
-                });
-                widget.onColorSeleted?.call(widget.colors[index]);
+                onVariantSelected?.call(variant);
               },
               child: Container(
-                margin: AppSpacing.w_10.mRight,
                 padding: AppSpacing.h_4.pAll,
+                margin: AppSpacing.w_10.mRight,
                 decoration: BoxDecoration(
                   color: context.colorScheme.onPrimary,
                   shape: BoxShape.circle,
@@ -54,10 +51,10 @@ class _ProductColorsState extends State<ProductColors> {
                     width: 1.5,
                   ),
                 ),
-                child: ColorCircle(colorsHex: colorsHex),
+                child: ColorCircle(colorsHex: variant.color),
               ),
             );
-          }),
+          }).toList(),
         ),
       ],
     );

@@ -38,6 +38,7 @@ Future<void> registerProducts() async {
     () => ProductsCubit(
       getIt<GetProductsUseCase>(),
       getIt<GetRelatedProductsUseCase>(),
+      getIt<GetProductByIdUseCase>(),
     ),
   );
 }

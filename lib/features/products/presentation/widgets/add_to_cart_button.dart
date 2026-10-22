@@ -18,20 +18,22 @@ class AddToCartButton extends StatelessWidget {
     required this.productEntity,
     required this._selectedVariant,
     required this.intialQuantity,
-    required this.context,
   });
 
   final VariantSize? _selectedSize;
   final ProductEntity productEntity;
   final ProductsVariant _selectedVariant;
   final int intialQuantity;
-  final BuildContext context;
 
   @override
   Widget build(BuildContext context) {
-    // final isLoggen =
-    //     context.read<AuthCubit>().state.status == AuthStatus.authenticated;
-    return BlocListener<CartCubit, CartState>(
+    return BlocConsumer<CartCubit, CartState>(
+      listenWhen: (previous, current) {
+        return previous.status == CartStatus.loading &&
+            (current.status == CartStatus.loaded ||
+                current.status == CartStatus.error ||
+                current.status == CartStatus.unAuthintecated);
+      },
       listener: (context, state) {
         if (state.status == CartStatus.unAuthintecated) {
           showDialog(
@@ -57,40 +59,46 @@ class AddToCartButton extends StatelessWidget {
             ),
           );
         } else if (state.status == CartStatus.loaded) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('Added Successful')));
-        } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.errorMessage ?? "Error")),
+            SnackBar(content: Text('Added Successful in Add_to_cart_button')),
+          );
+        } else if (state.status == CartStatus.error) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                state.errorMessage ?? "Error in add_to_cart_button",
+              ),
+            ),
           );
         }
       },
-      child: AppButton(
-        label: 'Add To Cart',
-        onPressed: _selectedSize != null
-            ? () {
-                final item = CartItemEntity(
-                  id: '${productEntity.id}_${_selectedVariant.color}_$_selectedSize',
-                  productId: productEntity.id,
-                  variantId: _selectedVariant.id,
-                  color: _selectedVariant.color,
-                  size: _selectedSize.size,
-                  imageUrl: productEntity.mainImage,
-                  quantity: intialQuantity,
-                  price: productEntity.finalPrice,
-                );
+      builder: (context, state) {
+        final isLoading = state.status == CartStatus.loading;
+        final canAdd = _selectedSize != null && !isLoading;
+        return AppButton(
+          label: 'Add To Cart',
+          isLoading: isLoading,
+          onPressed: canAdd
+              ? () {
+                  log(intialQuantity.toString());
+                  final item = CartItemEntity(
+                    id: '${productEntity.id}_${_selectedVariant.color}_${_selectedSize.size}',
+                    productId: productEntity.id,
+                    variantId: _selectedVariant.id,
+                    color: _selectedVariant.color,
+                    size: _selectedSize.size,
+                    imageUrl: productEntity.mainImage,
+                    quantity: intialQuantity,
+                    price: productEntity.finalPrice,
+                  );
 
-                // if (!isLoggen) {
-                //   context.pushNamed(RoutePaths.loginName);
-                // }
+                  context.read<CartCubit>().addToCart(item);
 
-                context.read<CartCubit>().addToCart(item);
-
-                log('Add Item');
-              }
-            : null,
-      ),
+                  log('Add Item');
+                }
+              : null,
+        );
+      },
     );
   }
 }

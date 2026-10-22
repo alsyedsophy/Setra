@@ -96,4 +96,20 @@ class CartRepositoryImpl implements CartRepository {
       return Left(ServerFailure(e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, void>> replaceCart(CartEntity cart) async {
+    if (!await networkInfo.isConnected) {
+      return Left(NetworkFailure());
+    }
+    try {
+      final model = CartModel.fromEntity(cart);
+      await _remoteDataSource.replaceCart(model);
+      return const Right(null);
+    } on AuthException {
+      return Left(AuthFailure());
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
 }

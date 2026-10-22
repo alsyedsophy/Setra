@@ -14,10 +14,14 @@ class CartItemCardView extends StatelessWidget {
     super.key,
     required this.item,
     required this.currentStock,
+    this.productName,
+    this.brand,
   });
 
   final CartItemEntity item;
   final int currentStock;
+  final String? productName;
+  final String? brand;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +37,6 @@ class CartItemCardView extends StatelessWidget {
                 width: AppSpacing.w_80,
                 height: AppSpacing.h_100,
                 decoration: BoxDecoration(
-                  // color: const Color(0xFFE0E0E0),
                   borderRadius: AppSpacing.r_4.rAll,
                   border: Border.all(
                     color: const Color(0xFFE0E0E0),
@@ -46,33 +49,37 @@ class CartItemCardView extends StatelessWidget {
                 ),
               ),
               AppSpacing.w_10.wSpace,
-
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Setra', style: context.textTheme.bodyLarge),
+                  Text(brand ?? 'Setra', style: context.textTheme.bodyLarge),
                   AppSpacing.h_4.hSpace,
-                  Text('Teshirt Oversize', style: context.textTheme.bodyMedium),
-                  Text(item.variantId, style: context.textTheme.bodyMedium),
+                  Text(
+                    productName ?? 'منتج',
+                    style: context.textTheme.bodyMedium,
+                  ),
+                  Text(
+                    '${item.color} / ${item.size}',
+                    style: context.textTheme.bodyMedium,
+                  ),
                   AppSpacing.h_4.hSpace,
                   Row(
                     children: [
                       Text('Quantity:', style: context.textTheme.bodyMedium),
-                      Spacer(),
+                      const Spacer(),
                       CartItemQuantity(item: item, currentStock: currentStock),
                     ],
                   ),
-
                   AppSpacing.h_10.hSpace,
                   Row(
                     children: [
                       Text(
-                        '${item.price.toStringAsFixed(2)} AGP',
+                        '${item.price.toStringAsFixed(2)} EGP',
                         style: context.textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Spacer(),
+                      const Spacer(),
                       IconButton(
                         icon: const Icon(Icons.delete),
                         onPressed: () {

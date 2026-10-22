@@ -157,7 +157,10 @@ class _ProductDetailsState extends State<ProductDetails> {
           ),
           initialQuantity: intialQuantity,
           onChange: (quantity) {
-            intialQuantity = quantity;
+            setState(() {
+              intialQuantity = quantity;
+            });
+            // log(intialQuantity.toString());
           },
           variantStock: _selectedSize != null ? _selectedSize!.stock : 0,
         ),
@@ -174,7 +177,6 @@ class _ProductDetailsState extends State<ProductDetails> {
           productEntity: widget.productEntity,
           selectedVariant: _selectedVariant,
           intialQuantity: intialQuantity,
-          context: context,
         ),
         AppSpacing.h_50.hSpace,
       ],

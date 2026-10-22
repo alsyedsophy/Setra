@@ -78,7 +78,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               },
               icon: Icon(Icons.shopping_cart_outlined),
             ),
-            if (cartCount != null)
+            if (cartCount != null && cartCount > 0)
               Positioned(
                 top: AppSpacing.h_4,
                 left: AppSpacing.w_4,

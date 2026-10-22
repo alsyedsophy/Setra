@@ -1,49 +1,59 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:setra/features/cart/domain/entities/cart_entity.dart';
 import 'package:setra/features/cart/presentation/widgets/cart_item_card_view.dart';
 import 'package:setra/features/products/domain/entities/product_entity.dart';
-import 'package:setra/features/products/presentation/cubit/products_cubit.dart';
-import 'package:setra/features/products/presentation/cubit/products_state.dart';
+import 'package:setra/features/products/domain/entities/products_variant.dart';
 
-class CartItemCard extends StatefulWidget {
-  const CartItemCard({super.key, required this.item});
+class CartItemCard extends StatelessWidget {
+  const CartItemCard({super.key, required this.item, this.product});
 
   final CartItemEntity item;
+  final ProductEntity? product;
 
-  @override
-  State<CartItemCard> createState() => _CartItemCardState();
-}
+  int _getAvailableStock() {
+    log(product.toString());
+    if (product == null || product!.variants.isEmpty) {
+      return item.quantity;
+    }
 
-class _CartItemCardState extends State<CartItemCard> {
-  @override
-  void initState() {
-    context.read<ProductsCubit>().getProductById(widget.item.productId);
-    super.initState();
-  }
+    ProductsVariant? variant;
+    try {
+      variant = product!.variants.firstWhere((v) => v.id == item.variantId);
+    } catch (_) {
+      try {
+        variant = product!.variants.firstWhere((v) => v.color == item.color);
+      } catch (_) {
+        variant = product!.variants.first;
+      }
+    }
+    log('Variant in card is :  $variant ==================');
 
-  int _getAvilableStock(ProductEntity? prouct) {
-    final variant = prouct?.variants.firstWhere(
-      (varaint) => varaint.color == widget.item.color,
-      orElse: () => prouct.variants.first,
-    );
+    if (variant.sizes.isEmpty) return 0;
 
-    final size = variant?.sizes.firstWhere(
-      (size) => size.size == widget.item.size,
-      orElse: () => variant.sizes.first,
-    );
+    VariantSize? size;
+    try {
+      size = variant.sizes.firstWhere((s) => s.size == item.size);
+    } catch (_) {
+      size = variant.sizes.first;
+    }
 
-    return size?.stock ?? widget.item.quantity;
+    log('Size in CArd is $size ====================');
+
+    if (!size.isActive) return 0;
+    return size.stock;
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProductsCubit, ProductsState>(
-      builder: (context, state) {
-        final ProductEntity? product = state.productById;
-        final currentStock = _getAvilableStock(product);
-        return CartItemCardView(item: widget.item, currentStock: currentStock);
-      },
+    final currentStock = _getAvailableStock();
+    log('current stock in card is : $currentStock');
+    return CartItemCardView(
+      item: item,
+      currentStock: currentStock,
+      productName: product?.name,
+      brand: product?.brand,
     );
   }
 }

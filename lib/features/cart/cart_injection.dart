@@ -8,7 +8,9 @@ import 'package:setra/features/cart/domain/use_cases/clear_cart_use_case.dart';
 import 'package:setra/features/cart/domain/use_cases/get_cart_items_use_case.dart';
 import 'package:setra/features/cart/domain/use_cases/remove_from_cart_use_case.dart';
 import 'package:setra/features/cart/domain/use_cases/update_cart_item_use_case.dart';
+import 'package:setra/features/cart/domain/use_cases/validate_and_sync_cart_use_case.dart';
 import 'package:setra/features/cart/presentation/cubits/cart_cubit.dart';
+import 'package:setra/features/products/domain/products_domain.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -39,6 +41,12 @@ Future<void> registerCart() async {
   getIt.registerLazySingleton<UpdateCartItemUseCase>(
     () => UpdateCartItemUseCase(getIt<CartRepository>()),
   );
+  getIt.registerLazySingleton<ValidateAndSyncCartUseCase>(
+    () => ValidateAndSyncCartUseCase(
+      cartRepository: getIt<CartRepository>(),
+      getProductById: getIt<GetProductByIdUseCase>(),
+    ),
+  );
 
   getIt.registerFactory<CartCubit>(
     () => CartCubit(
@@ -47,6 +55,8 @@ Future<void> registerCart() async {
       removeFromCartUseCase: getIt<RemoveFromCartUseCase>(),
       getCartUseCase: getIt<GetCartItemsUseCase>(),
       clearCartUseCase: getIt<ClearCartUseCase>(),
+      validateAndSyncCartUseCase: getIt<ValidateAndSyncCartUseCase>(),
+      getProductByIdUseCase: getIt<GetProductByIdUseCase>(),
     ),
   );
 }

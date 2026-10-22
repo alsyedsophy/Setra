@@ -11,6 +11,8 @@ abstract class RemoteCartDataSource {
   Future<void> updateCartItem(String itemId, int quantity);
   Stream<CartModel> getCartItems();
   Future<void> clearCart();
+
+  Future<void> replaceCart(CartModel cart);
 }
 
 class RemoteCartDataSourceImpl implements RemoteCartDataSource {
@@ -19,6 +21,7 @@ class RemoteCartDataSourceImpl implements RemoteCartDataSource {
 
   RemoteCartDataSourceImpl({required this.firestore, required this.auth});
 
+  // ======================= Helper =========================
   String get _uid {
     final uid = auth.currentUser?.uid;
     log('Check current user');
@@ -33,6 +36,7 @@ class RemoteCartDataSourceImpl implements RemoteCartDataSource {
   DocumentReference<Map<String, dynamic>> get _cartDoc =>
       firestore.collection('cart').doc(_uid);
 
+  // ================================ Methods ==========================
   @override
   Future<void> addToCart(CartItemModel cartItem) async {
     try {
@@ -154,7 +158,7 @@ class RemoteCartDataSourceImpl implements RemoteCartDataSource {
       });
       log('Added Item successfull at data source');
     } catch (e) {
-      log('Failure to Added Item at data source');
+      log('Failure to remove item from data source');
       throw ServerException(message: 'Failed to remove item from cart');
     }
   }
@@ -257,7 +261,7 @@ class RemoteCartDataSourceImpl implements RemoteCartDataSource {
       await firestore.runTransaction((transaction) async {
         final snapshot = await transaction.get(_cartDoc);
         if (!snapshot.exists) {
-          throw ServerException(message: 'Cart does not exist');
+          return;
         }
 
         final existingCart = CartModel.fromFireStore(snapshot.data()!);
@@ -272,6 +276,22 @@ class RemoteCartDataSourceImpl implements RemoteCartDataSource {
       });
     } catch (e) {
       throw ServerException(message: 'Failed to clear cart');
+    }
+  }
+
+  @override
+  Future<void> replaceCart(CartModel cart) async {
+    try {
+      await firestore.runTransaction((transaction) async {
+        // set كامل عشان يغطي حالة إن الدوكيومنت مش موجود
+        transaction.set(_cartDoc, cart.toFireStore());
+      });
+      log('replaceCart successful');
+    } on AuthException {
+      rethrow;
+    } catch (e) {
+      log('Failure replaceCart: $e');
+      throw ServerException(message: 'Failed to sync cart');
     }
   }
 }

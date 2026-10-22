@@ -8,4 +8,6 @@ abstract class CartRepository {
   Future<Either<Failure, void>> updateCartItem(String itemId, int quantity);
   Stream<CartEntity> getCartItems();
   Future<Either<Failure, void>> clearCart();
+
+  Future<Either<Failure, void>> replaceCart(CartEntity cart);
 }

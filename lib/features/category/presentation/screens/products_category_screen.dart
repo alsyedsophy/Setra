@@ -8,8 +8,8 @@ import 'package:setra/features/products/presentation/cubit/products_cubit.dart';
 import 'package:setra/features/products/presentation/cubit/products_state.dart';
 import 'package:setra/features/products/presentation/screens/products_list_screen.dart';
 
-class ProductsCategoryScreen extends StatelessWidget {
-  const ProductsCategoryScreen({super.key, required this.categoryId});
+class CategoryProductsScreen extends StatelessWidget {
+  const CategoryProductsScreen({super.key, required this.categoryId});
   final String categoryId;
 
   @override

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:setra/core/components/app_loading.dart';
@@ -12,18 +14,19 @@ import 'package:setra/features/category/presentation/cubit/category_state.dart';
 import 'package:setra/features/home/presentation/widgets/category_home_banner.dart';
 import 'package:setra/features/home/presentation/widgets/custom_home_drawer.dart';
 
-class CategoryScreen extends StatefulWidget {
-  const CategoryScreen({super.key, required this.gender});
+class ProductsGenderScreen extends StatefulWidget {
+  const ProductsGenderScreen({super.key, required this.gender});
   final String gender;
 
   @override
-  State<CategoryScreen> createState() => _CategoryScreenState();
+  State<ProductsGenderScreen> createState() => _ProductsGenderScreenState();
 }
 
-class _CategoryScreenState extends State<CategoryScreen> {
+class _ProductsGenderScreenState extends State<ProductsGenderScreen> {
   @override
   void initState() {
     super.initState();
+    log("${widget.gender}====================================");
     context.read<CategoryCubit>().loadCategoriesForGender(widget.gender);
   }
 
@@ -34,6 +37,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
       drawer: const CustomHomeDrawer(),
       body: BlocBuilder<CategoryCubit, CategoryState>(
         builder: (context, state) {
+          log(state.status.toString());
           if (state.status == CategoryStatus.initial ||
               state.status == CategoryStatus.loading) {
             return const AppLoading();

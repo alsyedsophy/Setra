@@ -21,7 +21,7 @@ class VerifyEmailScreen extends StatelessWidget {
     return BlocProvider(
       create: (_) => VerifyEmailCubit()..startTimer(),
       child: Scaffold(
-        appBar: const CustomAppBar(),
+        appBar: CustomAppBar(isAuth: true),
         body: ResponsiveLayout(
           mobile: const _VerifyEmailContent(),
           tablet: Center(

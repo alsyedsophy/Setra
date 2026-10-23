@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:setra/core/design_system/app_spacing.dart';
 import 'package:setra/core/extensions/context_extensions.dart';
 import 'package:setra/core/routing/routing.dart';
+import 'package:setra/features/auth/presentation/cubit/auth/auth_cubit.dart';
 
 class CustomHomeDrawer extends StatelessWidget {
   const CustomHomeDrawer({super.key});
@@ -43,20 +45,20 @@ class CustomHomeDrawer extends StatelessWidget {
             title: 'All Collections',
             onTap: () {
               context.pop();
-              context.pushNamed(RoutePaths.productsName);
+              context.pushNamed(RoutePaths.productsGenderName);
             },
           ),
           CustomDrawerListTile(
             icon: Icons.person,
             title: 'Mens',
             onTap: () =>
-                context.pushNamed(RoutePaths.categoryName, extra: 'men'),
+                context.pushNamed(RoutePaths.productsGenderName, extra: 'men'),
           ),
           CustomDrawerListTile(
             icon: Icons.person,
             title: 'Kids',
             onTap: () =>
-                context.pushNamed(RoutePaths.categoryName, extra: 'kids'),
+                context.pushNamed(RoutePaths.productsGenderName, extra: 'kids'),
           ),
           CustomDrawerListTile(
             icon: Icons.local_offer,
@@ -80,10 +82,22 @@ class CustomHomeDrawer extends StatelessWidget {
             title: 'Profile',
             onTap: () {
               context.pop();
-              context.go(RoutePaths.loginName);
+              context.goNamed(RoutePaths.loginName);
             },
           ),
-          CustomDrawerListTile(icon: Icons.logout, title: 'Logout'),
+          CustomDrawerListTile(
+            icon: Icons.location_city_outlined,
+            title: 'Addresses',
+            onTap: () {
+              // context.pop();
+              context.pushNamed(RoutePaths.addressesName);
+            },
+          ),
+          CustomDrawerListTile(
+            icon: Icons.logout,
+            title: 'Logout',
+            onTap: () => context.read<AuthCubit>().logout(),
+          ),
         ],
       ),
     );

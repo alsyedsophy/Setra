@@ -11,7 +11,6 @@ import 'package:setra/features/home/presentation/cubit/home_state.dart';
 import 'package:setra/features/home/presentation/widgets/banner_card.dart';
 import 'package:setra/features/home/presentation/widgets/category_section.dart';
 import 'package:setra/features/home/presentation/widgets/custom_home_drawer.dart';
-import 'package:setra/features/home/presentation/widgets/title_section.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

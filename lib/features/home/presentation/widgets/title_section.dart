@@ -23,7 +23,7 @@ class TitleSection extends StatelessWidget {
           child: Text("VIEW ALL", style: context.textTheme.titleSmall).onTap(
             () {
               // seedTestProduct(FirebaseFirestore.instance);
-              seedCategoryToFirebase();
+              onTap();
             },
           ),
         ),

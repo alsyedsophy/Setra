@@ -35,6 +35,8 @@ class FavoritesCubit extends Cubit<FavoritesState> {
 
     _sub = _watchFavourites().listen(
       (items) {
+        log('=================== sussess watch favorites ===============');
+        log('=================== success watch favorites ===============');
         if (!isClosed) {
           emit(
             state.copyWith(
@@ -46,6 +48,9 @@ class FavoritesCubit extends Cubit<FavoritesState> {
         }
       },
       onError: (Object error) {
+        log('=================== error watch favorites ===============');
+        log('=================== error watch favorites ===============');
+
         if (!isClosed) {
           emit(
             state.copyWith(
@@ -58,6 +63,9 @@ class FavoritesCubit extends Cubit<FavoritesState> {
     );
 
     // Kick off an initial sync with the remote.
+    log('=====================  Go To sync favorites ====================');
+    log('=====================  Go To sync favorites ====================');
+    log('=====================  Go To sync favorites ====================');
     _sync();
   }
 
@@ -86,6 +94,10 @@ class FavoritesCubit extends Cubit<FavoritesState> {
 
   Future<void> _sync() async {
     final result = await _syncFavorites();
+    log(
+      '=================== Sync favorites after call sync use case ===============',
+    );
+
     result.fold((failure) {
       if (!isClosed) {
         emit(state.copyWith(errorMessage: failure.message));

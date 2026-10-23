@@ -94,36 +94,34 @@ class FavoriteRepositoryImpl implements FavoritesRepository {
   Future<Either<Failure, void>> syncFavorites() async {
     try {
       final pending = await localDataSource.getOutBox();
-      if (pending.isEmpty) {
-        return const Right(null);
-      }
-
-      final done = <PendingOperation>[];
-      for (final op in pending) {
-        try {
-          switch (op.type) {
-            case PendingOpType.add:
-              await remoteDataSource.addFavourite(op.item!);
-              break;
-            case PendingOpType.remove:
-              await remoteDataSource.removeFavorite(
-                op.productId,
-                variantId: op.variantId,
-              );
-              break;
+      if (pending.isNotEmpty) {
+        final done = <PendingOperation>[];
+        for (final op in pending) {
+          try {
+            switch (op.type) {
+              case PendingOpType.add:
+                await remoteDataSource.addFavourite(op.item!);
+                break;
+              case PendingOpType.remove:
+                await remoteDataSource.removeFavorite(
+                  op.productId,
+                  variantId: op.variantId,
+                );
+                break;
+            }
+            done.add(op);
+          } on AuthException {
+            // Stop syncing - will retry later
+            break;
+          } on ServerException {
+            // Stop syncing - will retry later
+            break;
           }
-          done.add(op);
-        } on AuthException {
-          // Stop syncing - will retry later
-          break;
-        } on ServerException {
-          // Stop syncing - will retry later
-          break;
         }
-      }
 
-      if (done.isNotEmpty) {
-        await localDataSource.clearOutBox(done);
+        if (done.isNotEmpty) {
+          await localDataSource.clearOutBox(done);
+        }
       }
 
       // Merge local + remote to resolve conflicts (last-write-wins by addedAt)

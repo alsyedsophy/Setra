@@ -47,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: const CustomAppBar(isAuth: true),
       body: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state.errorMessage != null) {

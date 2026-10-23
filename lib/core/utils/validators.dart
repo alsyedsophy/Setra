@@ -30,6 +30,17 @@ class AppValidators {
     return null;
   }
 
+  static String? phone(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'validation_required';
+    }
+    final cleaned = value.replaceAll(RegExp(r'[\s\-]'), '');
+    if (!RegExp(r'^(\+?20)?0?1[0125][0-9]{8}$').hasMatch(cleaned)) {
+      return 'Phone number not correct';
+    }
+    return null;
+  }
+
   static String? confirmPassword(String? value, String? password) {
     if (value != password) {
       return 'validation_confirm_password';

@@ -22,12 +22,11 @@ class RoutePaths {
   static const String forgetPasswodName = 'forget_password';
 
   // Category
-  static const String category = '/category';
-  static const String categoryName = 'category';
-  static const String categoryDetail = '/category/:categoryId';
-  static const String categoryDetailName = 'category_detail';
-  static const String categoryProducts = 'category/products';
-  static const String categoryProductsName = 'category_products';
+  // static const String category = '/category';
+  // static const String categoryName = 'category';
+
+  static const String categoryProducts = '/category/categoryId';
+  static const String categoryProductsName = 'category_detail';
 
   // Products
 
@@ -37,6 +36,9 @@ class RoutePaths {
   static const String productsDetails = '/products/details';
   static const String productsDetailsName = 'products_details';
 
+  static const String productsGender = '/products/gender';
+  static const String productsGenderName = 'products_gender';
+
   // Favorites
   static const String favorites = '/favorites';
   static const String favoritesName = 'favorites';
@@ -44,4 +46,10 @@ class RoutePaths {
   // Cart
   static const String cart = '/cart';
   static const String cartName = 'cart';
+
+  // Address
+  static const String addresses = '/addresses';
+  static const String addressesName = 'addresses';
+  static const String addressForm = '/addresses/form';
+  static const String addressFormName = 'addressForm';
 }

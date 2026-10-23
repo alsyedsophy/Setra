@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:setra/core/dependency_injection/service_locator.dart';
 import 'package:setra/core/routing/stream_listenable.dart';
+import 'package:setra/features/address/address_route.dart';
 import 'package:setra/features/auth/auth_routes.dart';
 import 'package:setra/features/auth/presentation/cubit/auth/auth_cubit.dart';
 import 'package:setra/features/auth/presentation/cubit/auth/auth_state.dart';
 import 'package:setra/features/cart/cart_route.dart';
 import 'package:setra/features/category/category_routes.dart';
 import 'package:setra/features/favorites/favorites_routes.dart';
-import 'package:setra/features/home/presentation/screens/home_screen.dart';
+import 'package:setra/features/home/home_routes.dart';
 import 'package:setra/features/products/products_routes.dart';
 
 import 'route_error_screen.dart';
@@ -26,16 +27,13 @@ class AppRouter {
       initialLocation: RoutePaths.home,
       debugLogDiagnostics: true,
       routes: <RouteBase>[
+        ...homeRoutes,
         ...categoryRoutes,
         ...productsRoute,
         ...favoritesRoute,
         ...authRoutes,
         ...cartRoutes,
-        GoRoute(
-          path: RoutePaths.home,
-          name: RoutePaths.homeName,
-          builder: (BuildContext context, GoRouterState state) => HomeScreen(),
-        ),
+        ...addressRoutes,
       ],
       refreshListenable: StreamListenable(authCubit.stream),
       errorBuilder: (BuildContext context, GoRouterState state) =>
@@ -56,9 +54,15 @@ class AppRouter {
         final bool isHomeRoute =
             location == RoutePaths.home ||
             location == RoutePaths.favorites ||
-            location == RoutePaths.category ||
+            location == RoutePaths.categoryProducts ||
             location == RoutePaths.products ||
+            location == RoutePaths.productsGender ||
             location == RoutePaths.productsDetails;
+
+        final isProtectedRoute =
+            location == RoutePaths.addresses ||
+            location == RoutePaths.addressForm ||
+            location == RoutePaths.cart;
 
         if (authState.status == AuthStatus.initial ||
             (authState.status == AuthStatus.loading && isSplash)) {
@@ -81,13 +85,10 @@ class AppRouter {
 
         if (authState.status == AuthStatus.unauthenticated ||
             authState.status == AuthStatus.failure) {
-          if (isAuthRoute) {
-            return null;
+          if (isAuthRoute || isHomeRoute) return null;
+          if (isProtectedRoute && !isHomeRoute) {
+            return RoutePaths.login;
           }
-          if (isHomeRoute) {
-            return null;
-          }
-          return RoutePaths.login;
         }
 
         return null;

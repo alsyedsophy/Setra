@@ -5,8 +5,10 @@ import 'package:setra/features/address/address_injection.dart';
 import 'package:setra/features/auth/auth_injection.dart';
 import 'package:setra/features/cart/cart_injection.dart';
 import 'package:setra/features/category/category_injection.dart';
+import 'package:setra/features/checkout/checkout_injection.dart';
 import 'package:setra/features/favorites/favorite_injection.dart';
 import 'package:setra/features/home/home_injection.dart';
+import 'package:setra/features/orders/orders_injection.dart';
 import 'package:setra/features/products/products_injection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -61,4 +63,10 @@ Future<void> initCore() async {
 
   //? ============ Address ==============
   await registerAddress();
+
+  //? ============ Checkout ==============
+  await registerCheckout();
+
+  //? ============ Orders ==============
+  await registerOrders();
 }

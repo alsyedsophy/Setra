@@ -156,7 +156,7 @@ class CartCubit extends Cubit<CartState> {
 
     final updatedItems = currentCart.items.map((item) {
       if (item.id != itemId) return item;
-      final unitPrice = item.quantity > 1
+      final unitPrice = item.quantity > 0
           ? item.price / item.quantity
           : item.price;
       return item.copyWith(quantity: quantity, price: unitPrice * quantity);

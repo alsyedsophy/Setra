@@ -52,4 +52,14 @@ class RoutePaths {
   static const String addressesName = 'addresses';
   static const String addressForm = '/addresses/form';
   static const String addressFormName = 'addressForm';
+
+  // checkout
+  static const String checkout = '/checkout';
+  static const String checkoutName = 'checkout';
+
+  // Orders
+  static const String orders = '/orders';
+  static const String ordersName = 'orders';
+  static const String orderDetails = '/orders/details';
+  static const String ordersDetailsName = 'orders_details';
 }

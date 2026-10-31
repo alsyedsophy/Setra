@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:setra/core/routing/route_paths.dart';
 import 'package:setra/features/address/domain/entities/address_entity.dart';

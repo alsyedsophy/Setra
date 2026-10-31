@@ -20,29 +20,40 @@ class ValidateAndSyncCartUseCase {
 
   Future<Either<Failure, CartValidationResult>> call(CartEntity cart) async {
     if (cart.items.isEmpty) {
-      return Right(CartValidationResult(updatedCart: cart, changes: const []));
+      return Right(
+        CartValidationResult(
+          updatedCart: cart,
+          changes: const [],
+          products: const {},
+        ),
+      );
     }
 
     final List<CartItemEntity> syncedItems = [];
     final List<CartItemChange> changes = [];
+    final Map<String, dynamic> productsMap = {};
 
     for (final item in cart.items) {
       final productResult = await getProductById(item.productId);
 
-      final handled = await productResult.fold<Future<_ItemHandleResult>>((
-        failure,
-      ) async {
-        // المنتج مش موجود أو فشل الجلب → احذف العنصر
-        changes.add(
-          CartItemChange(
-            itemId: item.id,
-            productId: item.productId,
-            type: CartItemChangeType.productRemoved,
-            message: 'تم إزالة منتج غير متاح من السلة',
-          ),
-        );
-        return const _ItemHandleResult(item: null);
-      }, (product) async => _validateItem(item, product, changes));
+      final handled = await productResult.fold<Future<_ItemHandleResult>>(
+        (failure) async {
+          // المنتج مش موجود أو فشل الجلب → احذف العنصر
+          changes.add(
+            CartItemChange(
+              itemId: item.id,
+              productId: item.productId,
+              type: CartItemChangeType.productRemoved,
+              message: 'تم إزالة منتج غير متاح من السلة',
+            ),
+          );
+          return const _ItemHandleResult(item: null);
+        },
+        (product) async {
+          productsMap[product.id] = product;
+          return _validateItem(item, product, changes);
+        },
+      );
 
       if (handled.item != null) {
         syncedItems.add(handled.item!);
@@ -75,13 +86,21 @@ class ValidateAndSyncCartUseCase {
       return saveResult.fold(
         (failure) => Left(failure),
         (_) => Right(
-          CartValidationResult(updatedCart: updatedCart, changes: changes),
+          CartValidationResult(
+            updatedCart: updatedCart,
+            changes: changes,
+            products: productsMap,
+          ),
         ),
       );
     }
 
     return Right(
-      CartValidationResult(updatedCart: updatedCart, changes: changes),
+      CartValidationResult(
+        updatedCart: updatedCart,
+        changes: changes,
+        products: productsMap,
+      ),
     );
   }
 
@@ -154,7 +173,7 @@ class ValidateAndSyncCartUseCase {
 
     // 4) السعر (unit = product.finalPrice ، line total = unit * qty)
     // في الكارت: item.price = إجمالي السطر
-    final currentUnitPrice = item.quantity > 1
+    final currentUnitPrice = item.quantity > 0
         ? item.price / item.quantity
         : item.price;
     final newUnitPrice = product.finalPrice;

@@ -45,11 +45,16 @@ class CartItemChange extends Equatable {
 class CartValidationResult extends Equatable {
   final CartEntity updatedCart;
   final List<CartItemChange> changes;
+  final Map<String, dynamic> products;
 
   bool get hasChanges => changes.isNotEmpty;
 
-  const CartValidationResult({required this.updatedCart, required this.changes});
+  const CartValidationResult({
+    required this.updatedCart,
+    required this.changes,
+    required this.products,
+  });
 
   @override
-  List<Object?> get props => [updatedCart, changes];
+  List<Object?> get props => [updatedCart, changes, products];
 }

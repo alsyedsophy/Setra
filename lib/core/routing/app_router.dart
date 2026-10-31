@@ -10,8 +10,10 @@ import 'package:setra/features/auth/presentation/cubit/auth/auth_cubit.dart';
 import 'package:setra/features/auth/presentation/cubit/auth/auth_state.dart';
 import 'package:setra/features/cart/cart_route.dart';
 import 'package:setra/features/category/category_routes.dart';
+import 'package:setra/features/checkout/checkout_routs.dart';
 import 'package:setra/features/favorites/favorites_routes.dart';
 import 'package:setra/features/home/home_routes.dart';
+import 'package:setra/features/orders/orders_routs.dart';
 import 'package:setra/features/products/products_routes.dart';
 
 import 'route_error_screen.dart';
@@ -34,6 +36,8 @@ class AppRouter {
         ...authRoutes,
         ...cartRoutes,
         ...addressRoutes,
+        ...checkoutRoutes,
+        ...ordersRoutes,
       ],
       refreshListenable: StreamListenable(authCubit.stream),
       errorBuilder: (BuildContext context, GoRouterState state) =>
@@ -62,7 +66,10 @@ class AppRouter {
         final isProtectedRoute =
             location == RoutePaths.addresses ||
             location == RoutePaths.addressForm ||
-            location == RoutePaths.cart;
+            location == RoutePaths.cart ||
+            location == RoutePaths.checkout ||
+            location == RoutePaths.orders ||
+            location == RoutePaths.orderDetails;
 
         if (authState.status == AuthStatus.initial ||
             (authState.status == AuthStatus.loading && isSplash)) {

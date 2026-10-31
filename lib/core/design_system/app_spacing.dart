@@ -94,6 +94,7 @@ class AppSpacing {
   // Raduis
   static final double r_2 = 2.r;
   static final double r_4 = 4.r;
+  static final double r_8 = 8.r;
   static final double r_10 = 10.r;
   static final double r_12 = 12.r;
   static final double r_15 = 15.r;

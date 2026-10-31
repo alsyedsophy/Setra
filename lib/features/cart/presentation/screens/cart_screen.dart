@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:setra/core/components/app_button.dart';
 import 'package:setra/core/components/app_loading.dart';
 import 'package:setra/core/design_system/app_spacing.dart';
 import 'package:setra/core/extensions/num_extensions.dart';
 import 'package:setra/core/extensions/widget_extensions.dart';
+import 'package:setra/core/routing/routing.dart';
 import 'package:setra/core/widgets/app_error_view.dart';
 import 'package:setra/features/cart/domain/entities/cart_validation_result.dart';
 import 'package:setra/features/cart/presentation/cubits/cart_cubit.dart';
@@ -98,6 +100,7 @@ class CartScreen extends StatelessWidget {
                 AppButton(
                   onPressed: () {
                     // context.read<CartCubit>().clearCart();
+                    context.pushNamed(RoutePaths.checkoutName);
                   },
                   label:
                       'Checkout   (${state.cartEntity!.totalPrice.toStringAsFixed(2)})',

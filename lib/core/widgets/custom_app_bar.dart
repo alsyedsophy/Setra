@@ -65,7 +65,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           ElevatedButton(
                             onPressed: () {
                               context.pop();
-                              context.pushNamed(RoutePaths.loginName);
+                              context.goNamed(RoutePaths.loginName);
                             },
                             child: const Text('تسجيل الدخول'),
                           ),

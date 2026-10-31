@@ -1,9 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:setra/core/dependency_injection/service_locator.dart';
 import 'package:setra/core/routing/routing.dart';
-import 'package:setra/features/products/presentation/screens/products_gender_screen.dart';
 import 'package:setra/features/category/presentation/screens/products_category_screen.dart';
 import 'package:setra/features/products/domain/entities/product_filter.dart';
 import 'package:setra/features/products/presentation/cubit/products_cubit.dart';

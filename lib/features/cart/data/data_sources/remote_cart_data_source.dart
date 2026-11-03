@@ -72,8 +72,8 @@ class RemoteCartDataSourceImpl implements RemoteCartDataSource {
             log('the item already in the cart');
             final existingItem = updatedItems[existingItemIndex];
             final updatedQuantity = existingItem.quantity + cartItem.quantity;
-            final updatedPrice =
-                existingItem.price + (cartItem.price * cartItem.quantity);
+            // final updatedPrice =
+            //     existingItem.price + (cartItem.price * cartItem.quantity);
             final updatedItem = CartItemModel(
               id: existingItem.id,
               productId: existingItem.productId,
@@ -82,7 +82,7 @@ class RemoteCartDataSourceImpl implements RemoteCartDataSource {
               size: existingItem.size,
               imageUrl: existingItem.imageUrl,
               quantity: updatedQuantity,
-              price: updatedPrice,
+              price: existingItem.price,
             );
             updatedItems[existingItemIndex] = updatedItem;
             log('updated item in the cart and cart');
@@ -95,7 +95,7 @@ class RemoteCartDataSourceImpl implements RemoteCartDataSource {
           // Update total price and quantity
           final updatedTotalPrice = updatedItems.fold<double>(
             0.0,
-            (s, item) => s + item.price,
+            (s, item) => s + (item.price * item.quantity),
           );
           final updatedTotalQuantity = updatedItems.fold<int>(
             0,
@@ -140,7 +140,7 @@ class RemoteCartDataSourceImpl implements RemoteCartDataSource {
         // Update total price and quantity
         final updatedTotalPrice = updatedItems.fold<double>(
           0.0,
-          (s, item) => s + item.price,
+          (s, item) => s + (item.price * item.quantity),
         );
         final updatedTotalQuantity = updatedItems.fold<int>(
           0,
@@ -185,8 +185,6 @@ class RemoteCartDataSourceImpl implements RemoteCartDataSource {
         }
 
         final existingItem = updatedItems[existingItemIndex];
-        final updatedPrice =
-            (existingItem.price / existingItem.quantity) * quantity;
 
         final updatedItem = CartItemModel(
           id: existingItem.id,
@@ -196,7 +194,7 @@ class RemoteCartDataSourceImpl implements RemoteCartDataSource {
           size: existingItem.size,
           imageUrl: existingItem.imageUrl,
           quantity: quantity,
-          price: updatedPrice,
+          price: existingItem.price,
         );
 
         updatedItems[existingItemIndex] = updatedItem;
@@ -204,7 +202,7 @@ class RemoteCartDataSourceImpl implements RemoteCartDataSource {
         // Update total price and quantity
         final updatedTotalPrice = updatedItems.fold<double>(
           0.0,
-          (s, item) => s + item.price,
+          (s, item) => s + (item.price * item.quantity),
         );
         final updatedTotalQuantity = updatedItems.fold<int>(
           0,

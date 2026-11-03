@@ -5,7 +5,7 @@ import 'package:setra/core/design_system/app_spacing.dart';
 import 'package:setra/core/extensions/context_extensions.dart';
 import 'package:setra/core/extensions/num_extensions.dart';
 import 'package:setra/core/localization/localization.dart';
-import 'package:setra/core/utils/utils.dart';
+import 'package:setra/core/utils/validators.dart';
 import 'package:setra/features/auth/presentation/cubit/auth/auth_cubit.dart';
 import 'package:setra/features/auth/presentation/cubit/auth/auth_state.dart';
 import 'package:setra/features/auth/presentation/widgets/forget_submit_button.dart';

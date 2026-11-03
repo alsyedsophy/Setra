@@ -63,7 +63,7 @@ class ValidateAndSyncCartUseCase {
     // إعادة حساب الإجماليات
     final totalPrice = syncedItems.fold<double>(
       0.0,
-      (sum, item) => sum + item.price,
+      (sum, item) => sum + (item.price * item.quantity),
     );
     final totalQuantity = syncedItems.fold<int>(
       0,
@@ -173,14 +173,14 @@ class ValidateAndSyncCartUseCase {
 
     // 4) السعر (unit = product.finalPrice ، line total = unit * qty)
     // في الكارت: item.price = إجمالي السطر
-    final currentUnitPrice = item.quantity > 0
-        ? item.price / item.quantity
-        : item.price;
+    // final currentUnitPrice = item.quantity > 0
+    //     ? item.price / item.quantity
+    //     : item.price;
     final newUnitPrice = product.finalPrice;
-    final newLinePrice = newUnitPrice * newQuantity;
+    // final newLinePrice = newUnitPrice * newQuantity;
 
     // نعتبر فرق صغير بسبب double
-    final priceChanged = (currentUnitPrice - newUnitPrice).abs() > 0.009;
+    final priceChanged = (item.price - newUnitPrice).abs() > 0.009;
 
     if (priceChanged) {
       changes.add(
@@ -189,8 +189,8 @@ class ValidateAndSyncCartUseCase {
           productId: item.productId,
           type: CartItemChangeType.priceChanged,
           message:
-              'تم تحديث السعر من ${currentUnitPrice.toStringAsFixed(2)} إلى ${newUnitPrice.toStringAsFixed(2)}',
-          oldPrice: currentUnitPrice,
+              'تم تحديث السعر من ${item.price.toStringAsFixed(2)} إلى ${newUnitPrice.toStringAsFixed(2)}',
+          oldPrice: item.price,
           newPrice: newUnitPrice,
         ),
       );
@@ -198,7 +198,7 @@ class ValidateAndSyncCartUseCase {
 
     final syncedItem = item.copyWith(
       quantity: newQuantity,
-      price: newLinePrice,
+      price: newUnitPrice,
       // تحديث الصورة لو اتغيرت
       imageUrl: variant.imageUlrs.isNotEmpty
           ? variant.imageUlrs.first

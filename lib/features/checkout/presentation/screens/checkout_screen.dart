@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:setra/core/components/app_loading.dart';
 import 'package:setra/core/design_system/app_spacing.dart';
 import 'package:setra/core/extensions/context_extensions.dart';
@@ -78,9 +81,11 @@ class _CheckoutPageState extends State<CheckoutScreen> {
         ),
       );
       // TODO: انتقل إلى تفاصيل الطلب بعد ربط مسار Orders في GoRouter.
+      // context.goNamed(name)
     }
 
     if (state is CheckoutFailure) {
+      log(state.failure.message);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(state.failure.message),

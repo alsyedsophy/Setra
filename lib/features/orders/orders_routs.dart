@@ -18,10 +18,13 @@ List<RouteBase> get ordersRoutes => [
   ),
   GoRoute(
     path: RoutePaths.orderDetails,
-    name: RoutePaths.ordersDetailsName,
-    builder: (context, state) => BlocProvider(
-      create: (context) => getIt<OrderDetailsCubit>(),
-      child: OrderDetailsScreen(),
-    ),
+    name: RoutePaths.orderDetailsName,
+    builder: (context, state) {
+      final orderId = state.extra as String;
+      return BlocProvider(
+        create: (context) => getIt<OrderDetailsCubit>(),
+        child: OrderDetailsScreen(orderId: orderId),
+      );
+    },
   ),
 ];

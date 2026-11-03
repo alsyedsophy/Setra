@@ -60,7 +60,10 @@ class AddToCartButton extends StatelessWidget {
           );
         } else if (state.status == CartStatus.loaded) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Added Successful in Add_to_cart_button')),
+            SnackBar(
+              content: Text('Added Successful in Add_to_cart_button'),
+              behavior: SnackBarBehavior.floating,
+            ),
           );
         } else if (state.status == CartStatus.error) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -68,6 +71,7 @@ class AddToCartButton extends StatelessWidget {
               content: Text(
                 state.errorMessage ?? "Error in add_to_cart_button",
               ),
+              behavior: SnackBarBehavior.floating,
             ),
           );
         }

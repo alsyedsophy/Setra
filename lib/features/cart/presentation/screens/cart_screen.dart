@@ -7,6 +7,7 @@ import 'package:setra/core/design_system/app_spacing.dart';
 import 'package:setra/core/extensions/num_extensions.dart';
 import 'package:setra/core/extensions/widget_extensions.dart';
 import 'package:setra/core/routing/routing.dart';
+import 'package:setra/core/widgets/app_empty_view.dart';
 import 'package:setra/core/widgets/app_error_view.dart';
 import 'package:setra/features/cart/domain/entities/cart_validation_result.dart';
 import 'package:setra/features/cart/presentation/cubits/cart_cubit.dart';
@@ -84,7 +85,10 @@ class CartScreen extends StatelessWidget {
               state.cartEntity != null) {
             final cartItems = state.cartEntity!.items;
             if (cartItems.isEmpty) {
-              return const Center(child: Text('Your cart is empty'));
+              return AppEmptyView(
+                message: 'Your cart is empty',
+                icon: Icons.shopping_cart_outlined,
+              );
             }
             return Column(
               children: [

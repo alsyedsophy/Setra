@@ -61,5 +61,5 @@ class RoutePaths {
   static const String orders = '/orders';
   static const String ordersName = 'orders';
   static const String orderDetails = '/orders/details';
-  static const String ordersDetailsName = 'orders_details';
+  static const String orderDetailsName = 'order_details';
 }

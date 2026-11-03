@@ -81,7 +81,7 @@ class OrderModel extends OrderEntity {
       id: id,
       userId: data['userId'] ?? '',
       items:
-          (data['items'])
+          (data['items'] as List<dynamic>?)
               ?.map(
                 (item) =>
                     OrderItemModel.fromFirestore(item as Map<String, dynamic>),
@@ -134,7 +134,9 @@ class OrderModel extends OrderEntity {
       items: entity.items
           .map((item) => OrderItemModel.fromEntity(item))
           .toList(),
-      shippingAddress: entity.shippingAddress,
+      shippingAddress: OrderShippingAddressModel.fromEntity(
+        entity.shippingAddress,
+      ),
       subtotal: entity.subtotal,
       discount: entity.discount,
       shippingCost: entity.shippingCost,

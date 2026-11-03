@@ -14,7 +14,7 @@ class OrdersCubit extends Cubit<OrdersState> {
   StreamSubscription<dynamic>? _ordersSubscription;
 
   List<OrderEntity> _orders = [];
-  String? _currentUserId;
+  // String? _currentUserId;
   String? _cancellingOrderId;
 
   OrdersCubit({
@@ -23,29 +23,29 @@ class OrdersCubit extends Cubit<OrdersState> {
   }) : super(const OrdersInitial());
 
   /// بدء مراقبة طلبات المستخدم الحالي.
-  Future<void> watchOrders(String userId) async {
-    if (userId.trim().isEmpty) {
-      emit(
-        OrdersError(ValidationFailure('user_id_required', 'invalid_user_id')),
-      );
-      return;
-    }
+  Future<void> watchOrders() async {
+    // if (userId.trim().isEmpty) {
+    //   emit(
+    //     OrdersError(ValidationFailure('user_id_required', 'invalid_user_id')),
+    //   );
+    //   return;
+    // }
 
-    // لا نعيد إنشاء الاشتراك إذا كان المستخدم نفسه تتم مراقبته بالفعل.
-    if (_currentUserId == userId && _ordersSubscription != null) {
-      return;
-    }
+    // // لا نعيد إنشاء الاشتراك إذا كان المستخدم نفسه تتم مراقبته بالفعل.
+    // if (_currentUserId == userId && _ordersSubscription != null) {
+    //   return;
+    // }
 
     await _ordersSubscription?.cancel();
 
-    _currentUserId = userId;
+    // _currentUserId = userId;
     _orders = [];
     emit(const OrdersLoading());
 
     try {
       _ordersSubscription = watchUserOrdersUseCase().listen(
         (result) {
-          if (isClosed || _currentUserId != userId) return;
+          if (isClosed) return;
 
           result.fold((failure) => emit(OrdersError(failure)), (orders) {
             _orders = List<OrderEntity>.unmodifiable(orders);
@@ -58,7 +58,7 @@ class OrdersCubit extends Cubit<OrdersState> {
           });
         },
         onError: (Object error, StackTrace stackTrace) {
-          if (isClosed || _currentUserId != userId) return;
+          if (isClosed) return;
 
           emit(
             OrdersError(ServerFailure('watch_orders_failed', 'stream_error')),

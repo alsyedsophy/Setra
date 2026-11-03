@@ -72,7 +72,7 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
   }
 
   /// إلغاء الطلب الحالي.
-  Future<void> cancelOrder() async {
+  Future<void> cancelOrder(String orderId) async {
     if (_isCancelling || isClosed) return;
 
     final currentState = state;

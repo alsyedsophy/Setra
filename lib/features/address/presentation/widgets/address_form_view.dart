@@ -5,7 +5,7 @@ import 'package:setra/core/components/app_button.dart';
 import 'package:setra/core/components/app_text_field.dart';
 import 'package:setra/core/design_system/design_system.dart';
 import 'package:setra/core/extensions/num_extensions.dart';
-import 'package:setra/core/utils/utils.dart';
+import 'package:setra/core/utils/validators.dart';
 import 'package:setra/features/address/presentation/cubits/address_cubit.dart';
 import 'package:setra/features/address/presentation/cubits/address_state.dart';
 

@@ -74,7 +74,7 @@ class CartItemCardView extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        '${item.price.toStringAsFixed(2)} EGP',
+                        '${(item.price * item.quantity).toStringAsFixed(2)} EGP',
                         style: context.textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),

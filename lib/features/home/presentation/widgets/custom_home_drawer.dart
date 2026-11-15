@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -8,6 +10,77 @@ import 'package:setra/features/auth/presentation/cubit/auth/auth_cubit.dart';
 
 class CustomHomeDrawer extends StatelessWidget {
   const CustomHomeDrawer({super.key});
+
+  Future<void> _onProfileTap(BuildContext context) async {
+    final authCubit = context.read<AuthCubit>();
+
+    Scaffold.of(context).closeDrawer();
+    await Future.delayed(const Duration(milliseconds: 260));
+
+    if (!context.mounted) return;
+    if (authCubit.state.user != null) {
+      context.pushNamed(RoutePaths.profileName);
+      return;
+    }
+    await authCubit.checkCurrentUser();
+
+    if (!context.mounted) return;
+
+    log('================== user = ${authCubit.state.user} ================');
+
+    if (authCubit.state.user != null) {
+      context.pushNamed(RoutePaths.profileName);
+      return;
+    } else {
+      _showLoginRequiredDialog(context);
+    }
+  }
+
+  void _showLoginRequiredDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text('Login Required'),
+          content: const Text('You need to sign in to access your profile.'),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+
+                if (dialogContext.mounted) {
+                  dialogContext.goNamed(RoutePaths.loginName);
+                }
+              },
+              child: const Text('Login'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // void _closeDrawerAndGo(
+  //   BuildContext context,
+  //   String routeName, {
+  //   Object? extra,
+  // }) {
+  //   Navigator.of(context).pop();
+
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     if (!context.mounted) return;
+  //     context.goNamed(routeName, extra: extra);
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +109,7 @@ class CustomHomeDrawer extends StatelessWidget {
             icon: Icons.home,
             title: 'Home',
             onTap: () {
-              context.pop();
+              Navigator.of(context).pop();
               context.goNamed(RoutePaths.homeName);
             },
           ),
@@ -44,7 +117,7 @@ class CustomHomeDrawer extends StatelessWidget {
             icon: Icons.person,
             title: 'All Collections',
             onTap: () {
-              context.pop();
+              Navigator.of(context).pop();
               context.pushNamed(RoutePaths.productsGenderName);
             },
           ),
@@ -68,44 +141,19 @@ class CustomHomeDrawer extends StatelessWidget {
             icon: Icons.local_offer_sharp,
             title: 'Winter Collection',
           ),
-          CustomDrawerListTile(
-            icon: Icons.favorite,
-            title: 'Favorites',
-            onTap: () {
-              context.pop();
-              context.pushNamed(RoutePaths.favoritesName);
-            },
-          ),
-          CustomDrawerListTile(
-            icon: Icons.favorite,
-            title: 'Orders',
-            onTap: () {
-              context.pop();
-              context.pushNamed(RoutePaths.ordersName);
-            },
-          ),
+
           CustomDrawerListTile(icon: Icons.local_offer_sharp, title: 'Offers'),
           CustomDrawerListTile(
             icon: Icons.person,
             title: 'Profile',
-            onTap: () {
-              context.pop();
-              context.goNamed(RoutePaths.loginName);
-            },
+            onTap: () => _onProfileTap(context),
           ),
-          CustomDrawerListTile(
-            icon: Icons.location_city_outlined,
-            title: 'Addresses',
-            onTap: () {
-              // context.pop();
-              context.pushNamed(RoutePaths.addressesName);
-            },
-          ),
-          CustomDrawerListTile(
-            icon: Icons.logout,
-            title: 'Logout',
-            onTap: () => context.read<AuthCubit>().logout(),
-          ),
+
+          // CustomDrawerListTile(
+          //   icon: Icons.logout,
+          //   title: 'Logout',
+          //   onTap: () => context.read<AuthCubit>().logout(),
+          // ),
         ],
       ),
     );

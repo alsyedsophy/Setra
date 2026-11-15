@@ -30,7 +30,7 @@ class _AddressesScreenState extends State<AddressesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Your Address'), centerTitle: true),
-      drawer: CustomHomeDrawer(),
+      // drawer: CustomHomeDrawer(),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           context.pushNamed(RoutePaths.addressFormName);
@@ -64,12 +64,6 @@ class _AddressesScreenState extends State<AddressesScreen> {
             return const AppLoading();
           }
 
-          // if (state.status == AddressStatus.unAuthenticated) {
-          //   return const Center(
-          //     child: Text('يجب تسجيل الدخول لعرض العناوين'),
-          //   );
-          // }
-
           if (state.status == AddressStatus.error && state.addresses.isEmpty) {
             return AppErrorView(
               message: state.errorMessage ?? 'حدث خطأ',
@@ -78,7 +72,10 @@ class _AddressesScreenState extends State<AddressesScreen> {
           }
 
           if (state.addresses.isEmpty) {
-            return AppEmptyView(message: 'No Address yet');
+            return AppEmptyView(
+              message: 'No Address yet',
+              icon: Icons.place_outlined,
+            );
           }
 
           return RefreshIndicator(

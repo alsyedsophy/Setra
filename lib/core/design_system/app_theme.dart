@@ -5,10 +5,6 @@ import 'app_radius.dart';
 import 'app_spacing.dart';
 import 'app_text_styles.dart';
 
-/// Application themes built from the design system tokens.
-///
-/// Both a light and a dark [ThemeData] are provided. Every component reads from
-/// [Theme.of], so it adapts to the active theme automatically.
 class AppTheme {
   AppTheme._();
 

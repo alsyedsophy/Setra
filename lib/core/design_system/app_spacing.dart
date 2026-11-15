@@ -38,6 +38,7 @@ class AppSpacing {
   static final double h_144 = 144.h;
   static final double h_180 = 180.h;
   static final double h_193 = 193.h;
+  static final double h_210 = 210.h;
   static final double h_223 = 223.h;
   static final double h_230 = 230.h;
   static final double h_248 = 248.h;
@@ -45,6 +46,7 @@ class AppSpacing {
   static final double h_300 = 300.h;
 
   static final double h_306 = 306.h;
+  static final double h_310 = 310.h;
   static final double h_320 = 320.h;
   static final double h_340 = 340.h;
   static final double h_350 = 350.h;
@@ -102,6 +104,7 @@ class AppSpacing {
   static final double r_25 = 25.r;
   static final double r_35 = 35.r;
   static final double r_40 = 40.r;
+  static final double r_55 = 55.r;
 
   // BluerRaduis
   static final double b_10 = 10;

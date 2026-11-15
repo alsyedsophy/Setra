@@ -10,6 +10,7 @@ import 'package:setra/features/favorites/favorite_injection.dart';
 import 'package:setra/features/home/home_injection.dart';
 import 'package:setra/features/orders/orders_injection.dart';
 import 'package:setra/features/products/products_injection.dart';
+import 'package:setra/features/profile/profile_injection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../localization/locale_cubit.dart';
@@ -69,4 +70,7 @@ Future<void> initCore() async {
 
   //? ============ Orders ==============
   await registerOrders();
+
+  //? ============ Profile ==============
+  await registerProfile();
 }

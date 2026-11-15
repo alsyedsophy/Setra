@@ -15,6 +15,7 @@ import 'package:setra/features/favorites/favorites_routes.dart';
 import 'package:setra/features/home/home_routes.dart';
 import 'package:setra/features/orders/orders_routs.dart';
 import 'package:setra/features/products/products_routes.dart';
+import 'package:setra/features/profile/profile_routes.dart';
 
 import 'route_error_screen.dart';
 import 'route_paths.dart';
@@ -38,6 +39,7 @@ class AppRouter {
         ...addressRoutes,
         ...checkoutRoutes,
         ...ordersRoutes,
+        profileRoutes,
       ],
       refreshListenable: StreamListenable(authCubit.stream),
       errorBuilder: (BuildContext context, GoRouterState state) =>
@@ -64,6 +66,9 @@ class AppRouter {
             location == RoutePaths.productsDetails;
 
         final isProtectedRoute =
+            location == RoutePaths.profile ||
+            location == RoutePaths.profileUpdate ||
+            location == RoutePaths.profileDetails ||
             location == RoutePaths.addresses ||
             location == RoutePaths.addressForm ||
             location == RoutePaths.cart ||
@@ -94,7 +99,7 @@ class AppRouter {
             authState.status == AuthStatus.failure) {
           if (isAuthRoute || isHomeRoute) return null;
           if (isProtectedRoute && !isHomeRoute) {
-            return RoutePaths.login;
+            return RoutePaths.home;
           }
         }
 

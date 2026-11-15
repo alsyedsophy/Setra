@@ -11,11 +11,15 @@ class AppEmptyView extends StatelessWidget {
   const AppEmptyView({
     required this.message,
     this.icon = Icons.inbox_outlined,
+    this.buttonTitle,
+    this.goKeping,
     super.key,
   });
 
   final String message;
   final IconData icon;
+  final String? buttonTitle;
+  final void Function()? goKeping;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +40,16 @@ class AppEmptyView extends StatelessWidget {
             textAlign: TextAlign.center,
             style: theme.textTheme.bodyLarge,
           ),
+          if (buttonTitle != null &&
+              buttonTitle!.isNotEmpty &&
+              goKeping != null) ...[
+            AppSpacing.h_24.hSpace,
+            Text(
+              buttonTitle!,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.titleLarge,
+            ).onTap(goKeping),
+          ],
         ],
       ).paddingAll(AppSpacing.h_48),
     );

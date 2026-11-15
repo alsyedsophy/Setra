@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:setra/features/auth/domain/entities/user_entity.dart';
 import 'package:setra/features/auth/domain/usecases/auth_use_cases.dart';
@@ -8,22 +9,21 @@ import 'package:setra/features/auth/presentation/cubit/auth/auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   final LoginUseCase _logInUseCase;
-  final RegisterUseCase _registerUseCase;
-  final GoogleSignInUseCase _signInWithGoogleUseCase;
+  final RegisterWithProfileUseCase _registerWithProfileUseCase;
+  final GoogleSignInWithProfileUseCase _googleSignInWithProfileUseCase;
   final SendPasswordResetUseCase _sendPasswordResetUseCase;
   final LogoutUseCase _logOutUseCase;
   final GetCurrentUserUseCase _getCurrentUserUseCase;
   final AuthStateChangesUseCase _authStateChangesUseCase;
   final CheckVerificationEmailUseCase _checkVerificationEmailUseCase;
-  final SendEmailVerificationUseCase
-  _sendEmailVerificationUseCase; // 🔥 مضاف لإرسال رابط التفعيل
+  final SendEmailVerificationUseCase _sendEmailVerificationUseCase;
 
   StreamSubscription? _authSubscription;
 
   AuthCubit({
     required this._logInUseCase,
-    required this._registerUseCase,
-    required this._signInWithGoogleUseCase,
+    required this._registerWithProfileUseCase,
+    required this._googleSignInWithProfileUseCase,
     required this._sendPasswordResetUseCase,
     required this._logOutUseCase,
     required this._getCurrentUserUseCase,
@@ -44,6 +44,7 @@ class AuthCubit extends Cubit<AuthState> {
   void _listenToAuthChanges() {
     _authSubscription?.cancel();
     _authSubscription = _authStateChangesUseCase().listen((user) {
+      if (state.status == AuthStatus.loading) return;
       if (user != null) {
         emit(
           state.copyWith(
@@ -57,7 +58,7 @@ class AuthCubit extends Cubit<AuthState> {
           emit(
             state.copyWith(
               status: AuthStatus.unauthenticated,
-              user: null,
+              clearUser: true,
               clearError: true,
             ),
           );
@@ -90,7 +91,7 @@ class AuthCubit extends Cubit<AuthState> {
           emit(
             state.copyWith(
               status: AuthStatus.unauthenticated,
-              user: null,
+              clearUser: true,
               clearError: true,
             ),
           );
@@ -125,9 +126,10 @@ class AuthCubit extends Cubit<AuthState> {
           errorMessage: failure.message,
         ),
       ),
-      (isVerified) {
+      (isVerified) async {
+        log('=============== is Verified = $isVerified');
         if (isVerified) {
-          checkCurrentUser();
+          await checkCurrentUser();
         } else {
           emit(
             state.copyWith(
@@ -169,32 +171,42 @@ class AuthCubit extends Cubit<AuthState> {
     required String password,
   }) async {
     emit(state.copyWith(status: AuthStatus.loading, clearError: true));
-    final result = await _registerUseCase(
+
+    final result = await _registerWithProfileUseCase(
       name: name,
       email: email,
       password: password,
     );
 
-    result.fold(
-      (failure) => emit(
-        state.copyWith(
-          status: AuthStatus.failure,
-          errorMessage: failure.message,
-        ),
-      ),
-      (user) => emit(
-        state.copyWith(
-          status: _resolveAuthStatus(user),
-          user: user,
-          clearError: true,
-        ),
-      ),
+    await result.fold(
+      (failure) async {
+        emit(
+          state.copyWith(
+            status: AuthStatus.failure,
+            errorMessage: failure.message,
+          ),
+        );
+      },
+      (user) async {
+        emit(
+          state.copyWith(
+            status: _resolveAuthStatus(user),
+            user: user,
+            clearError: true,
+          ),
+        );
+
+        // إرسال إيميل التفعيل بعد النجاح
+        if (!user.isEmailVerified) {
+          await sendEmailVerification();
+        }
+      },
     );
   }
 
   Future<void> signInWithGoogle() async {
     emit(state.copyWith(status: AuthStatus.loading, clearError: true));
-    final result = await _signInWithGoogleUseCase();
+    final result = await _googleSignInWithProfileUseCase();
 
     result.fold(
       (failure) => emit(
@@ -230,7 +242,6 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> logout() async {
-    emit(state.copyWith(status: AuthStatus.loading));
     final result = await _logOutUseCase();
     result.fold(
       (failure) => emit(
@@ -242,7 +253,7 @@ class AuthCubit extends Cubit<AuthState> {
       (_) => emit(
         state.copyWith(
           status: AuthStatus.unauthenticated,
-          user: null,
+          clearUser: true,
           clearError: true,
         ),
       ),

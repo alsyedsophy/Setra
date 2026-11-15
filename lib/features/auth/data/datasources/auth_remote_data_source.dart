@@ -100,7 +100,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
       return UserModel(
         id: user.uid,
-        name: user.displayName ?? '',
+        name: name,
         email: user.email,
         isEmailVerified: user.emailVerified,
       );

@@ -30,12 +30,13 @@ class AuthState extends Equatable {
   AuthState copyWith({
     AuthStatus? status,
     UserEntity? user,
+    bool clearUser = false,
     String? errorMessage,
     bool clearError = false,
   }) {
     return AuthState(
       status: status ?? this.status,
-      user: user ?? this.user,
+      user: clearUser ? null : (user ?? this.user),
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
     );
   }

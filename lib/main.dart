@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => getIt<AuthCubit>()),
+        BlocProvider.value(value: getIt<AuthCubit>()),
         BlocProvider(create: (context) => getIt<LocaleCubit>()..loadLocale()),
         BlocProvider(create: (context) => getIt<ThemeCubit>()..loadTheme()),
         BlocProvider(create: (context) => getIt<HomeCubit>()),

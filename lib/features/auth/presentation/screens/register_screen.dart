@@ -4,7 +4,6 @@ import 'package:setra/core/design_system/design_system.dart';
 import 'package:setra/core/extensions/extensions.dart';
 import 'package:setra/core/extensions/num_extensions.dart';
 import 'package:setra/core/localization/localization.dart';
-// ⬇️ الاستيرادات الجديدة
 import 'package:setra/core/responsive/app_responsive.dart';
 import 'package:setra/core/responsive/responsive_layout.dart';
 import 'package:setra/core/widgets/custom_app_bar.dart';
@@ -61,13 +60,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
           }
         },
         child: ResponsiveLayout(
-          // 🟢 الموبايل: كامل العرض
           mobile: _buildContent(context),
 
-          // 🟡 التابلت: ممركز بعرض أقصى 560 (أوسع قليلاً من Login بسبب عدد الحقول)
           tablet: _buildContent(context),
 
-          // 🔵 الديسكتوب: صورة جانبية + الفورم
           desktop: Row(
             children: [
               const Expanded(flex: 5, child: _RegisterIllustration()),

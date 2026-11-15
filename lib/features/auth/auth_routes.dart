@@ -17,24 +17,21 @@ List<RouteBase> get authRoutes => [
   GoRoute(
     path: RoutePaths.login,
     name: RoutePaths.loginName,
-    builder: (BuildContext context, GoRouterState state) => const LoginScreen(),
+    builder: (context, state) => LoginScreen(),
   ),
   GoRoute(
     path: RoutePaths.register,
     name: RoutePaths.registerName,
-    builder: (BuildContext context, GoRouterState state) =>
-        const RegisterScreen(),
+    builder: (context, state) => RegisterScreen(),
   ),
   GoRoute(
     path: RoutePaths.verifyEmail,
     name: RoutePaths.verifyEmailName,
-    builder: (BuildContext context, GoRouterState state) =>
-        const VerifyEmailScreen(),
+    builder: (context, state) => VerifyEmailScreen(),
   ),
   GoRoute(
     path: RoutePaths.forgetPasswod,
     name: RoutePaths.forgetPasswodName,
-    builder: (BuildContext context, GoRouterState state) =>
-        const ForgetPasswordScreen(),
+    builder: (context, state) => ForgetPasswordScreen(),
   ),
 ];

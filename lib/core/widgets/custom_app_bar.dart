@@ -52,25 +52,33 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   if (cartState!.status == CartStatus.unAuthintecated) {
                     showDialog(
                       context: context,
-                      builder: (context) => AlertDialog(
-                        title: const Text('تسجيل الدخول مطلوب'),
-                        content: const Text(
-                          'يجب تسجيل الدخول لإضافة المنتجات إلى السلة.\nهل تريد الانتقال إلى صفحة تسجيل الدخول؟',
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () => context.pop(),
-                            child: const Text('إلغاء'),
+                      builder: (dialogContext) {
+                        return AlertDialog(
+                          title: const Text('Login Required'),
+                          content: const Text(
+                            'You need to sign in to access your profile.',
                           ),
-                          ElevatedButton(
-                            onPressed: () {
-                              context.pop();
-                              context.goNamed(RoutePaths.loginName);
-                            },
-                            child: const Text('تسجيل الدخول'),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
                           ),
-                        ],
-                      ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(dialogContext).pop();
+                              },
+                              child: const Text('Cancel'),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(dialogContext).pop();
+
+                                context.goNamed(RoutePaths.loginName);
+                              },
+                              child: const Text('Login'),
+                            ),
+                          ],
+                        );
+                      },
                     );
                   } else {
                     context.pushNamed(RoutePaths.cartName);

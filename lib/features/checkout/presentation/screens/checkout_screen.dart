@@ -7,6 +7,7 @@ import 'package:setra/core/components/app_loading.dart';
 import 'package:setra/core/design_system/app_spacing.dart';
 import 'package:setra/core/extensions/context_extensions.dart';
 import 'package:setra/core/extensions/num_extensions.dart';
+import 'package:setra/core/routing/route_paths.dart';
 import 'package:setra/features/address/domain/entities/address_entity.dart';
 import 'package:setra/features/address/presentation/cubits/address_cubit.dart';
 import 'package:setra/features/address/presentation/cubits/address_state.dart';
@@ -260,7 +261,7 @@ class _CheckoutPageState extends State<CheckoutScreen> {
         onAddressSelected: (address) =>
             context.read<AddressCubit>().selectAddress(address),
         onAddNewAddress: () {
-          // TODO: انتقل إلى شاشة إضافة عنوان.
+          context.pushNamed(RoutePaths.addressFormName);
         },
       ),
     );

@@ -4,11 +4,13 @@ import 'package:setra/features/auth/data/repositories/auth_repository_impl.dart'
 import 'package:setra/features/auth/domain/repositories/auth_repository.dart';
 import 'package:setra/features/auth/domain/usecases/auth_use_cases.dart';
 import 'package:setra/features/auth/domain/usecases/check_verification_email_use_case.dart';
+import 'package:setra/features/auth/domain/usecases/google_sign_in_with_profile_use_case.dart';
 import 'package:setra/features/auth/domain/usecases/send_email_verification_use_case.dart';
 import 'package:setra/features/auth/presentation/cubit/auth/auth_cubit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:setra/features/profile/domain/use_cases/create_profile_use_case.dart';
 
 Future<void> registerAuthentication() async {
   final GetIt getIt = GetIt.instance;
@@ -43,8 +45,21 @@ Future<void> registerAuthentication() async {
   getIt.registerLazySingleton<RegisterUseCase>(
     () => RegisterUseCase(getIt<AuthRepository>()),
   );
+
+  getIt.registerLazySingleton<RegisterWithProfileUseCase>(
+    () => RegisterWithProfileUseCase(
+      registerUseCase: getIt<RegisterUseCase>(),
+      createProfileUseCase: getIt<CreateProfileUseCase>(),
+    ),
+  );
   getIt.registerLazySingleton<GoogleSignInUseCase>(
     () => GoogleSignInUseCase(getIt<AuthRepository>()),
+  );
+  getIt.registerLazySingleton(
+    () => GoogleSignInWithProfileUseCase(
+      googleSignInUseCase: getIt(),
+      ensureProfileUseCase: getIt(),
+    ),
   );
   getIt.registerLazySingleton<LogoutUseCase>(
     () => LogoutUseCase(getIt<AuthRepository>()),
@@ -65,11 +80,11 @@ Future<void> registerAuthentication() async {
 
   // Cubits.
 
-  getIt.registerFactory<AuthCubit>(
+  getIt.registerLazySingleton<AuthCubit>(
     () => AuthCubit(
       logInUseCase: getIt<LoginUseCase>(),
-      registerUseCase: getIt<RegisterUseCase>(),
-      signInWithGoogleUseCase: getIt<GoogleSignInUseCase>(),
+      registerWithProfileUseCase: getIt<RegisterWithProfileUseCase>(),
+      googleSignInWithProfileUseCase: getIt<GoogleSignInWithProfileUseCase>(),
       sendPasswordResetUseCase: getIt<SendPasswordResetUseCase>(),
       logOutUseCase: getIt<LogoutUseCase>(),
       getCurrentUserUseCase: getIt<GetCurrentUserUseCase>(),

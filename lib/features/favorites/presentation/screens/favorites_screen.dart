@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:setra/core/components/app_loading.dart';
 import 'package:setra/core/design_system/app_spacing.dart';
 import 'package:setra/core/design_system/design_system.dart';
 import 'package:setra/core/extensions/context_extensions.dart';
+import 'package:setra/core/extensions/extensions.dart';
 import 'package:setra/core/localization/l10n_extension.dart';
+import 'package:setra/core/routing/routing.dart';
 import 'package:setra/core/widgets/app_empty_view.dart';
 import 'package:setra/core/widgets/app_error_view.dart';
 import 'package:setra/features/favorites/domain/entities/favorite_entity.dart';
 import 'package:setra/features/favorites/presentation/cubit/favorites_cubit.dart';
 import 'package:setra/features/favorites/presentation/cubit/favorites_state.dart';
 import 'package:setra/features/favorites/presentation/widgets/favorite_card.dart';
-import 'package:setra/features/home/presentation/widgets/custom_home_drawer.dart';
 
 class FavoritesScreen extends StatelessWidget {
   const FavoritesScreen({super.key});
@@ -28,7 +30,7 @@ class FavoritesScreen extends StatelessWidget {
           ),
         ],
       ),
-      drawer: const CustomHomeDrawer(),
+      // drawer: const CustomHomeDrawer(),
       body: BlocConsumer<FavoritesCubit, FavoritesState>(
         listener: (context, state) {
           if (state.status == FavoritesStatus.failure &&
@@ -52,16 +54,15 @@ class FavoritesScreen extends StatelessWidget {
           }
 
           if (state.status == FavoritesStatus.success && state.items.isEmpty) {
-            return const AppEmptyView(
+            return AppEmptyView(
               message: 'No favorites yet',
               icon: Icons.favorite_border,
+              buttonTitle: 'Go To Home',
+              goKeping: () => context.goNamed(RoutePaths.homeName),
             );
           }
 
-          return RefreshIndicator(
-            onRefresh: () => context.read<FavoritesCubit>().refresh(),
-            child: FavoritesList(favorites: state.items),
-          );
+          return FavoritesList(favorites: state.items);
         },
       ),
     );
@@ -86,6 +87,6 @@ class FavoritesList extends StatelessWidget {
         final item = favorites[index];
         return FavoriteCard(favoriteItem: item);
       },
-    );
+    ).paddingHorizontal(AppSpacing.w_12);
   }
 }

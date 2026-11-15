@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:setra/core/components/components.dart';
 import 'package:setra/core/extensions/context_extensions.dart';
+import 'package:setra/core/routing/routing.dart';
 import 'package:setra/core/widgets/widgets.dart';
 
 import 'package:setra/features/orders/presentation/cubits/orders_cubit.dart';
@@ -76,7 +78,12 @@ class _OrdersScreenState extends State<OrdersScreen> {
     }
 
     if (state is OrdersEmpty) {
-      return AppEmptyView(message: 'No Orders yet');
+      return AppEmptyView(
+        message: 'No Orders yet',
+        icon: Icons.place_outlined,
+        buttonTitle: 'Go To Home',
+        goKeping: () => context.goNamed(RoutePaths.homeName),
+      );
     }
 
     if (state is OrdersError) {

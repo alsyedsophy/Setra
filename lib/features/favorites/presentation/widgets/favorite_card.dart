@@ -15,24 +15,22 @@ class FavoriteCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: AppSpacing.w_256,
-      height: AppSpacing.h_300,
+      height: AppSpacing.h_320,
       child: Container(
         decoration: BoxDecoration(
           color: context.colorScheme.onPrimary,
-          borderRadius: AppSpacing.r_12.rTop,
+          borderRadius: AppSpacing.r_12.rAll,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Stack(
               children: [
-                ClipRRect(
-                  borderRadius: AppSpacing.r_12.rAll,
-                  child: AppNetworkImage(
-                    imageUrl: favoriteItem.imageUrl,
-                    fit: BoxFit.cover,
-                    height: AppSpacing.h_230,
-                  ),
+                AppNetworkImage(
+                  imageUrl: favoriteItem.imageUrl,
+                  fit: BoxFit.cover,
+                  height: AppSpacing.h_210,
+                  width: AppSpacing.w_256,
                 ),
                 Positioned(
                   top: AppSpacing.h_8,
@@ -47,14 +45,14 @@ class FavoriteCard extends StatelessWidget {
               style: AppTextStyles.lightTextTheme.labelMedium,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-            ),
+            ).expanded,
             SizedBox(height: AppSpacing.h_4),
             Text(
               '\$${favoriteItem.price.toStringAsFixed(2)}',
               style: AppTextStyles.lightTextTheme.bodyLarge!.copyWith(
                 color: LightColors.onSurface,
               ),
-            ),
+            ).expanded,
           ],
         ),
       ),

@@ -62,4 +62,12 @@ class RoutePaths {
   static const String ordersName = 'orders';
   static const String orderDetails = '/orders/details';
   static const String orderDetailsName = 'order_details';
+
+  // Profile
+  static const String profile = '/profile';
+  static const String profileName = 'profile';
+  static const String profileDetails = '/profile/details';
+  static const String profileDetailsName = 'profile_details';
+  static const String profileUpdate = '/profile/update';
+  static const String profileUpdateName = 'profile_update';
 }

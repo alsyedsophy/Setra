@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:setra/core/components/app_loading.dart';
 import 'package:setra/core/design_system/app_spacing.dart';
 import 'package:setra/core/design_system/design_system.dart';
-import 'package:setra/core/extensions/context_extensions.dart';
 import 'package:setra/core/extensions/extensions.dart';
 import 'package:setra/core/localization/l10n_extension.dart';
 import 'package:setra/core/routing/routing.dart';
@@ -14,6 +12,7 @@ import 'package:setra/features/favorites/domain/entities/favorite_entity.dart';
 import 'package:setra/features/favorites/presentation/cubit/favorites_cubit.dart';
 import 'package:setra/features/favorites/presentation/cubit/favorites_state.dart';
 import 'package:setra/features/favorites/presentation/widgets/favorite_card.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class FavoritesScreen extends StatelessWidget {
   const FavoritesScreen({super.key});
@@ -45,9 +44,7 @@ class FavoritesScreen extends StatelessWidget {
           }
         },
         builder: (context, state) {
-          if (state.status == FavoritesStatus.loading) {
-            return const AppLoading();
-          }
+          
 
           if (state.status == FavoritesStatus.failure && state.items.isEmpty) {
             return AppErrorView(message: state.errorMessage!);
@@ -62,7 +59,16 @@ class FavoritesScreen extends StatelessWidget {
             );
           }
 
-          return FavoritesList(favorites: state.items);
+          final isLoading = state.status == FavoritesStatus.initial ||
+              state.status == FavoritesStatus.loading;
+
+              final List<FavoriteItem> displayFavorites = isLoading && state.items.isEmpty
+              ? List.generate(5, (index) => FavoriteItem.empty())
+              : state.items;
+
+          return Skeletonizer(
+            enabled: isLoading,
+            child: FavoritesList(favorites: displayFavorites));
         },
       ),
     );

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:setra/core/errors/exceptions.dart';
+import 'package:setra/core/errors/exceptions_mapper.dart';
 import 'package:setra/features/auth/data/models/user_model.dart';
 
 abstract class AuthRemoteDataSource {
@@ -56,7 +57,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         isEmailVerified: user.emailVerified,
       );
     } on FirebaseAuthException catch (e) {
-      throw _handleFirebaseAuthException(e);
+      throw ExceptionsMapper.handleFirebaseAuthException(e);
     }
   }
 
@@ -80,7 +81,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         isEmailVerified: user.emailVerified,
       );
     } on FirebaseAuthException catch (e) {
-      throw _handleFirebaseAuthException(e);
+      throw ExceptionsMapper.handleFirebaseAuthException(e);
     }
   }
 
@@ -105,7 +106,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         isEmailVerified: user.emailVerified,
       );
     } on FirebaseAuthException catch (e) {
-      throw _handleFirebaseAuthException(e);
+      throw ExceptionsMapper.handleFirebaseAuthException(e);
     }
   }
 
@@ -152,7 +153,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         isEmailVerified: user.emailVerified,
       );
     } on FirebaseAuthException catch (e) {
-      throw _handleFirebaseAuthException(e);
+      throw ExceptionsMapper.handleFirebaseAuthException(e);
     }
   }
 
@@ -162,7 +163,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       await _firebaseAuth.currentUser?.reload();
       return _firebaseAuth.currentUser?.emailVerified ?? false;
     } on FirebaseAuthException catch (e) {
-      throw _handleFirebaseAuthException(e);
+      throw ExceptionsMapper.handleFirebaseAuthException(e);
     }
   }
 
@@ -171,7 +172,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     try {
       await _firebaseAuth.currentUser?.sendEmailVerification();
     } on FirebaseAuthException catch (e) {
-      throw _handleFirebaseAuthException(e);
+      throw ExceptionsMapper.handleFirebaseAuthException(e);
     }
   }
 
@@ -180,7 +181,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: email);
     } on FirebaseAuthException catch (e) {
-      throw _handleFirebaseAuthException(e);
+      throw ExceptionsMapper.handleFirebaseAuthException(e);
     }
   }
 
@@ -189,38 +190,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     try {
       await Future.wait([_firebaseAuth.signOut(), _googleSignIn.signOut()]);
     } on FirebaseAuthException catch (e) {
-      throw _handleFirebaseAuthException(e);
-    }
-  }
-
-  // ==================== Helper ====================
-  Exceptions _handleFirebaseAuthException(FirebaseAuthException e) {
-    switch (e.code) {
-      case 'user-not-found':
-        return AuthException(message: 'هذا المستخدم غير مسجل');
-      case 'wrong-password':
-      case 'invalid-credential':
-        return AuthException(
-          message: 'البريد الإلكتروني أو كلمة المرور غير صحيحة',
-        );
-
-      case 'email-already-in-use':
-        return AuthException(message: 'البريد الإلكتروني مستخدم بالفعل');
-
-      case 'weak-password':
-        return ValidationException(message: 'كلمة المرور ضعيفة جداً');
-
-      case 'invalid-email':
-        return ValidationException(message: 'البريد الإلكتروني غير صالح');
-
-      case 'network-request-failed':
-        return NetworkException(message: 'لا يوجد اتصال بالإنترنت');
-
-      case 'too-many-requests':
-        return AuthException(message: 'محاولات كثيرة جداً، حاول لاحقاً');
-
-      default:
-        return AuthException(message: e.message ?? 'حدث خطأ أثناء المصادقة');
+      throw ExceptionsMapper.handleFirebaseAuthException(e);
     }
   }
 }

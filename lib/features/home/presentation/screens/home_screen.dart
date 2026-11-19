@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:setra/core/components/app_loading.dart';
 import 'package:setra/core/design_system/design_system.dart';
 import 'package:setra/core/extensions/extensions.dart';
 import 'package:setra/core/extensions/num_extensions.dart';
@@ -11,6 +10,7 @@ import 'package:setra/features/home/presentation/cubit/home_state.dart';
 import 'package:setra/features/home/presentation/widgets/banner_card.dart';
 import 'package:setra/features/home/presentation/widgets/category_section.dart';
 import 'package:setra/features/home/presentation/widgets/custom_home_drawer.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -39,21 +39,23 @@ class _HomeScreenState extends State<HomeScreen> {
               SnackBar(
                 content: Text(state.errorMessage!),
                 backgroundColor: context.colorScheme.error,
+                behavior: SnackBarBehavior.floating,
               ),
             );
           }
         },
         builder: (context, state) {
-          if (state.status == HomeStatus.loading) {
-            return AppLoading();
-          }
+          final isLoading = state.status == HomeStatus.loading;
 
           return RefreshIndicator(
             onRefresh: () => context.read<HomeCubit>().loadHomeData(),
-            child: ResponsiveLayout(
-              mobile: _buildMobileLayout(context, state),
-              // tablet: _buildTabletLayout(context, state),
-              // desktop: _buildDesktopLayout(context, state),
+            child: Skeletonizer(
+              enabled: isLoading,
+              child: ResponsiveLayout(
+                mobile: _buildMobileLayout(context, state),
+                // tablet: _buildTabletLayout(context, state),
+                // desktop: _buildDesktopLayout(context, state),
+              ),
             ),
           );
         },

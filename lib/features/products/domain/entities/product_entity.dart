@@ -48,6 +48,30 @@ class ProductEntity extends Equatable {
     this.updatedAt,
   });
 
+  factory ProductEntity.empty() {
+    return ProductEntity(
+      id: '',
+      name: '',
+      description: '',
+      price: 0.0,
+      finalPrice: 0.0,
+      discountPercentage: 0,
+      hasDiscount: false,
+      imageUrls: const [],
+      categoryId: '',
+      gender: ProductGender.men,
+      brand: '',
+      tags: const [],
+      variants: const [],
+      newArrival: false,
+      featured: false,
+      stock: 0,
+      rating: 0.0,
+      reviewCount: 0,
+      createdAt: DateTime.now(),
+    );
+  }
+
   /// ✅ Factory ذكي — بيحسب الحقول المشتقة تلقائيًا.
   /// استخدمه وقت **الكتابة** (Admin panel / Seeder).
   factory ProductEntity.priced({

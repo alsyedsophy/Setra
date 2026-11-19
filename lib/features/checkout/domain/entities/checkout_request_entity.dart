@@ -10,6 +10,12 @@ class CheckoutRequestEntity extends Equatable {
     required this.shippingAddress,
     required this.paymentMethod,
   });
+  factory CheckoutRequestEntity.empty() {
+    return CheckoutRequestEntity(
+      shippingAddress: AddressEntity.empty(),
+      paymentMethod: PaymentMethod.cashOnDelivery,
+    );
+  }
 
   @override
   List<Object?> get props => [shippingAddress, paymentMethod];

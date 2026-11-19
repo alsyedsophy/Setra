@@ -4,10 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../localization/localization.dart';
 
-/// Reusable language switcher.
-///
-/// Applies the selection to easy_localization (so all `.tr()` calls and text
-/// direction update immediately) and persists it through [LocaleCubit].
 class LocaleToggle extends StatelessWidget {
   const LocaleToggle({super.key});
 

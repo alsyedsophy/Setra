@@ -43,20 +43,15 @@ class OrderItemEntity extends Equatable {
 class OrderEntity extends Equatable {
   final String id;
   final String userId;
-
   final List<OrderItemEntity> items;
-
   final OrderShippingAddressEntity shippingAddress;
-
   final double subtotal;
   final double discount;
   final double shippingCost;
   final double total;
-
   final OrderStatus orderStatus;
   final PaymentStatus paymentStatus;
   final PaymentMethod paymentMethod;
-
   final DateTime createdAt;
   final DateTime? updatedAt;
 
@@ -75,6 +70,23 @@ class OrderEntity extends Equatable {
     required this.createdAt,
     this.updatedAt,
   });
+
+  factory OrderEntity.empty() {
+    return OrderEntity(
+      id: '',
+      userId: '',
+      items: const [],
+      shippingAddress: OrderShippingAddressEntity.empty(),
+      subtotal: 0.0,
+      discount: 0.0,
+      shippingCost: 0.0,
+      total: 0.0,
+      orderStatus: OrderStatus.pending,
+      paymentStatus: PaymentStatus.pending,
+      paymentMethod: PaymentMethod.cashOnDelivery,
+      createdAt: DateTime.now(),
+    );
+  }
 
   @override
   List<Object?> get props => [

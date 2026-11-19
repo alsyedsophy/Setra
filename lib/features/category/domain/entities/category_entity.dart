@@ -29,6 +29,23 @@ class CategoryEntity extends Equatable {
     this.updatedAt,
   });
 
+  factory CategoryEntity.empty() {
+    return CategoryEntity(
+      id: '',
+      name: '',
+      nameEn: null,
+      description: null,
+      imageUrl: '',
+      gender: '',
+      displayOrder: 0,
+      isActive: true,
+      isFeatured: false,
+      productCount: 0,
+      createdAt: DateTime.now(),
+      updatedAt: null,
+    );
+  }
+
   bool get hasImage => imageUrl.trim().isNotEmpty;
 
   bool get hasDescription =>

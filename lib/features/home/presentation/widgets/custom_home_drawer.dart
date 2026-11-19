@@ -69,19 +69,6 @@ class CustomHomeDrawer extends StatelessWidget {
     );
   }
 
-  // void _closeDrawerAndGo(
-  //   BuildContext context,
-  //   String routeName, {
-  //   Object? extra,
-  // }) {
-  //   Navigator.of(context).pop();
-
-  //   WidgetsBinding.instance.addPostFrameCallback((_) {
-  //     if (!context.mounted) return;
-  //     context.goNamed(routeName, extra: extra);
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -118,7 +105,7 @@ class CustomHomeDrawer extends StatelessWidget {
             title: 'All Collections',
             onTap: () {
               Navigator.of(context).pop();
-              context.pushNamed(RoutePaths.productsGenderName);
+              context.pushNamed(RoutePaths.productsName);
             },
           ),
           CustomDrawerListTile(

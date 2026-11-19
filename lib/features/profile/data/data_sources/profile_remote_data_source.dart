@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:setra/core/errors/exceptions.dart';
+import 'package:setra/core/errors/exceptions_mapper.dart';
 import 'package:setra/features/profile/data/models/profile_model.dart';
 
 abstract class ProfileRemoteDataSource {
@@ -55,8 +56,8 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
       }
 
       return ProfileModel.fromFirestore(snapshot.data()!, snapshot.id);
-    } on FirebaseException catch (e) {
-      throw ServerException(message: e.message ?? 'Failed to get user profile');
+    } catch (e) {
+      throw ExceptionsMapper.handleUnknowException(e);
     }
   }
 
@@ -80,18 +81,9 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
         transaction.set(reference, profile.toFirestore());
         log('---------------- set profile success ----------------');
       });
-    } on FirebaseException catch (e) {
-      log('---------------- create profile error $e ----------------');
-      throw ServerException(
-        message: e.message ?? 'Failed to create user profile',
-      );
     } catch (e) {
-      // ✅ التعديل الأهم: التقاط أي استثناء آخر (مثل ServerException الملقى يدوياً) وعدم ضياعه
       log('---------------- create profile error $e ----------------');
-      if (e is ServerException || e is AuthException) {
-        rethrow;
-      }
-      throw ServerException(message: e.toString());
+      throw ExceptionsMapper.handleUnknowException(e);
     }
   }
 
@@ -113,10 +105,8 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
 
         return profile;
       });
-    } on FirebaseException catch (e) {
-      throw ServerException(
-        message: e.message ?? 'Failed to ensure user profile',
-      );
+    } catch (e) {
+      throw ExceptionsMapper.handleUnknowException(e);
     }
   }
 
@@ -136,10 +126,8 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
       return ProfileModel.fromEntity(
         profile.copyWith(updatedAt: DateTime.now()),
       );
-    } on FirebaseException catch (e) {
-      throw ServerException(
-        message: e.message ?? 'Failed to update user profile',
-      );
+    } catch (e) {
+      throw ExceptionsMapper.handleUnknowException(e);
     }
   }
 }

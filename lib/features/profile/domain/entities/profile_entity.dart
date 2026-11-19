@@ -19,6 +19,18 @@ class ProfileEntity extends Equatable {
     this.updatedAt,
   });
 
+  factory ProfileEntity.empty() {
+    return ProfileEntity(
+      id: '',
+      name: '',
+      email: null,
+      phoneNumber: null,
+      photoUrl: null,
+      createdAt: DateTime.now(),
+      updatedAt: null,
+    );
+  }
+
   ProfileEntity copyWith({
     String? name,
     String? email,
@@ -39,12 +51,12 @@ class ProfileEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        name,
-        email,
-        phoneNumber,
-        photoUrl,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    name,
+    email,
+    phoneNumber,
+    photoUrl,
+    createdAt,
+    updatedAt,
+  ];
 }

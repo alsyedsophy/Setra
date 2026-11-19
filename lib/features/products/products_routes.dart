@@ -7,7 +7,7 @@ import 'package:setra/features/products/presentation/screens/products_gender_scr
 import 'package:setra/features/products/domain/entities/product_entity.dart';
 import 'package:setra/features/products/presentation/cubit/products_cubit.dart';
 import 'package:setra/features/products/presentation/screens/Product_details.dart';
-import 'package:setra/features/products/presentation/screens/products_list_screen.dart';
+import 'package:setra/features/products/presentation/screens/all_collection_screen.dart';
 
 List<RouteBase> get productsRoute => [
   GoRoute(
@@ -15,7 +15,7 @@ List<RouteBase> get productsRoute => [
     name: RoutePaths.productsName,
     builder: (context, state) => BlocProvider.value(
       value: getIt<ProductsCubit>()..loadProducts(),
-      child: ProductsListScreen(),
+      child: AllCollectionScreen(),
     ),
   ),
   GoRoute(

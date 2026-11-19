@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
+import 'package:setra/core/errors/error_mapper.dart';
 import 'package:setra/core/errors/exceptions.dart';
 import 'package:setra/core/errors/failures.dart';
 import 'package:setra/core/network/network_info.dart';
@@ -16,52 +17,32 @@ class CartRepositoryImpl implements CartRepository {
   CartRepositoryImpl(this._remoteDataSource, {required this.networkInfo});
 
   @override
-  Future<Either<Failure, void>> addToCart(CartItemEntity cartItem) async {
-    if (!await networkInfo.isConnected) {
-      return Left(NetworkFailure());
-    }
-    try {
-      final cartItemModel = CartItemModel.fromEntity(cartItem);
-      log('convert item to model');
-      await _remoteDataSource.addToCart(cartItemModel);
-      log('Added Item successfull at repository');
-      return const Right(null);
-    } on AuthException {
-      return Left(AuthFailure());
-    } catch (e) {
-      log('Failure to Added Item successfull at repository');
-      return Left(ServerFailure(e.toString()));
-    }
-  }
+  Future<Either<Failure, void>> addToCart(CartItemEntity cartItem) =>
+      _handleCall(() async {
+        await _remoteDataSource.addToCart(CartItemModel.fromEntity(cartItem));
+      });
+  @override
+  Future<Either<Failure, void>> removeFromCart(String itemId) =>
+      _handleCall(() async {
+        await _remoteDataSource.removeFromCart(itemId);
+      });
 
   @override
-  Future<Either<Failure, void>> removeFromCart(String itemId) async {
-    if (!await networkInfo.isConnected) {
-      return Left(NetworkFailure());
-    }
-    try {
-      await _remoteDataSource.removeFromCart(itemId);
-      return const Right(null);
-    } catch (e) {
-      return Left(ServerFailure(e.toString()));
-    }
-  }
+  Future<Either<Failure, void>> updateCartItem(String itemId, int quantity) =>
+      _handleCall(() async {
+        await _remoteDataSource.updateCartItem(itemId, quantity);
+      });
 
   @override
-  Future<Either<Failure, void>> updateCartItem(
-    String itemId,
-    int quantity,
-  ) async {
-    if (!await networkInfo.isConnected) {
-      return Left(NetworkFailure());
-    }
-    try {
-      await _remoteDataSource.updateCartItem(itemId, quantity);
-      return const Right(null);
-    } catch (e) {
-      return Left(ServerFailure(e.toString()));
-    }
-  }
+  Future<Either<Failure, void>> clearCart() => _handleCall(() async {
+    await _remoteDataSource.clearCart();
+  });
+
+  @override
+  Future<Either<Failure, void>> replaceCart(CartEntity cart) =>
+      _handleCall(() async {
+        await _remoteDataSource.replaceCart(CartModel.fromEntity(cart));
+      });
 
   @override
   Stream<CartEntity> getCartItems() async* {
@@ -72,44 +53,30 @@ class CartRepositoryImpl implements CartRepository {
 
     try {
       yield* _remoteDataSource.getCartItems().handleError((error) {
-        if (error is AuthException) {
-          throw AuthFailure(error.message);
+        if (error is Exceptions) {
+          throw ErrorMapper.mapExceptionToFailure(error);
         }
-        throw ServerFailure(error.toString());
+        throw UnknownFailure(error.toString());
       });
-    } on AuthException catch (e) {
-      yield* Stream.error(AuthFailure(e.message));
+    } on Exceptions catch (e) {
+      yield* Stream.error(ErrorMapper.mapExceptionToFailure(e));
     } catch (e) {
-      yield* Stream.error(ServerFailure(e.toString()));
+      yield* Stream.error(UnknownFailure(e.toString()));
     }
   }
 
-  @override
-  Future<Either<Failure, void>> clearCart() async {
+  Future<Either<Failure, T>> _handleCall<T>(Future<T> Function() call) async {
     if (!await networkInfo.isConnected) {
       return Left(NetworkFailure());
     }
     try {
-      await _remoteDataSource.clearCart();
-      return const Right(null);
-    } catch (e) {
-      return Left(ServerFailure(e.toString()));
-    }
-  }
-
-  @override
-  Future<Either<Failure, void>> replaceCart(CartEntity cart) async {
-    if (!await networkInfo.isConnected) {
-      return Left(NetworkFailure());
-    }
-    try {
-      final model = CartModel.fromEntity(cart);
-      await _remoteDataSource.replaceCart(model);
-      return const Right(null);
-    } on AuthException {
-      return Left(AuthFailure());
-    } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Right(await call());
+    } on Exceptions catch (e, st) {
+      log('Cart call failed', error: e, stackTrace: st);
+      return Left(ErrorMapper.mapExceptionToFailure(e));
+    } catch (e, st) {
+      log('Unexpected cart error', error: e, stackTrace: st);
+      return Left(UnknownFailure());
     }
   }
 }

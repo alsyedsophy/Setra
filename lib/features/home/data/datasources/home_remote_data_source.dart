@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:setra/core/errors/exceptions.dart';
+import 'package:setra/core/errors/exceptions_mapper.dart';
 import 'package:setra/features/home/data/models/banner_model.dart';
 
 abstract class HomeRemoteDataSource {
@@ -23,20 +24,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
           .map((doc) => BannerModel.fromFirestore(doc.data(), doc.id))
           .toList();
     } on FirebaseException catch (e) {
-      throw _handleFirebaseException(e);
-    }
-  }
-
-  Exceptions _handleFirebaseException(FirebaseException e) {
-    switch (e.code) {
-      case 'permission-denied':
-        return AuthException(message: 'Permission denied');
-      case 'unavailable':
-        return NetworkException(message: 'No internet connection');
-      case 'not-found':
-        return ServerException(message: 'Document not found');
-      default:
-        return ServerException(message: e.message ?? 'Server error');
+      throw ExceptionsMapper.handleFirebaseFirestoreException(e);
     }
   }
 }

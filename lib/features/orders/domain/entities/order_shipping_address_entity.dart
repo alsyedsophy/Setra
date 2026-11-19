@@ -21,6 +21,19 @@ class OrderShippingAddressEntity extends Equatable {
     this.notes,
   });
 
+  factory OrderShippingAddressEntity.empty() {
+    return const OrderShippingAddressEntity(
+      addressId: null,
+      fullName: '',
+      phone: '',
+      city: '',
+      area: '',
+      street: '',
+      building: null,
+      notes: null,
+    );
+  }
+
   @override
   List<Object?> get props => [
     addressId,

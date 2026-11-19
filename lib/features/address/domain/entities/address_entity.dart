@@ -29,6 +29,23 @@ class AddressEntity extends Equatable {
     this.updatedAt,
   });
 
+  factory AddressEntity.empty() {
+    return  AddressEntity(
+      id: '',
+      userId: '',
+      fullName: '',
+      phone: '',
+      city: '',
+      area: '',
+      street: '',
+      building: null,
+      notes: null,
+      isDefault: false,
+      createdAt: DateTime.now(),
+      updatedAt: null,
+    );
+  }
+
   AddressEntity copyWith({
     String? id,
     String? userId,

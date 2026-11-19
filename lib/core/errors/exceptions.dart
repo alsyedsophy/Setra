@@ -24,6 +24,6 @@ class ValidationException extends Exceptions {
   ValidationException({required super.message});
 }
 
-class UnKnowWxception extends Exceptions {
-  UnKnowWxception({required super.message});
+class UnKnowException extends Exceptions {
+  UnKnowException({required super.message});
 }

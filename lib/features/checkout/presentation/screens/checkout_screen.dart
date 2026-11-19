@@ -18,6 +18,7 @@ import 'package:setra/features/checkout/domain/entities/checkout_request_entity.
 import 'package:setra/features/checkout/presentation/cubit/checkout_cubit.dart';
 import 'package:setra/features/checkout/presentation/cubit/checkout_state.dart';
 import 'package:setra/features/orders/domain/entities/order_status.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../widgets/address/address_picker_sheet.dart';
 import '../widgets/checkout_bottom_bar.dart';
@@ -99,25 +100,11 @@ class _CheckoutPageState extends State<CheckoutScreen> {
   // ─────────────────────────── Body ───────────────────────────
 
   Widget _buildBody(CartState cartState) {
-    if (cartState.status == CartStatus.loading ||
-        cartState.status == CartStatus.initial) {
-      return const AppLoading();
-    }
-
     if (cartState.status == CartStatus.unAuthintecated) {
       return const CheckoutMessage(
         icon: Icons.lock_outline,
         title: 'Login required',
         message: 'Please log in to continue with your order.',
-      );
-    }
-
-    final cart = cartState.cartEntity;
-    if (cart == null || cart.items.isEmpty) {
-      return const CheckoutMessage(
-        icon: Icons.shopping_bag_outlined,
-        title: 'Your cart is empty',
-        message: 'Add products to your cart before checking out.',
       );
     }
 
@@ -134,13 +121,23 @@ class _CheckoutPageState extends State<CheckoutScreen> {
       );
     }
 
+    final isCartLoading =
+        cartState.status == CartStatus.initial ||
+        cartState.status == CartStatus.loading;
+
+    if (!isCartLoading) {
+      final cart = cartState.cartEntity;
+      if (cart == null || cart.items.isEmpty) {
+        return const CheckoutMessage(
+          icon: Icons.shopping_bag_outlined,
+          title: 'Your cart is empty',
+          message: 'Add products to your cart before checking out.',
+        );
+      }
+    }
+
     return BlocBuilder<AddressCubit, AddressState>(
       builder: (context, addressState) {
-        if (addressState.status == AddressStatus.initial ||
-            addressState.status == AddressStatus.loading) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
         if (addressState.status == AddressStatus.unAuthenticated) {
           return const CheckoutMessage(
             icon: Icons.lock_outline,
@@ -158,11 +155,32 @@ class _CheckoutPageState extends State<CheckoutScreen> {
           );
         }
 
-        return _buildCheckoutContent(
-          cart: cart,
-          cartState: cartState,
-          addresses: addressState.addresses,
-          selectedAddress: addressState.selectedAddress,
+        final isAddressLoading =
+            addressState.status == AddressStatus.initial ||
+            addressState.status == AddressStatus.loading;
+
+        final displayCart = isCartLoading
+            ? CartEntity.empty()
+            : cartState.cartEntity!;
+
+        final displayAddresses =
+            isAddressLoading && addressState.addresses.isEmpty
+            ? List.generate(3, (index) => AddressEntity.empty())
+            : addressState.addresses;
+
+        final selectedAddress = (isCartLoading || isAddressLoading)
+            ? null
+            : addressState.selectedAddress;
+
+        return Skeletonizer(
+          enabled: isCartLoading,
+          child: _buildCheckoutContent(
+            cart: displayCart,
+            cartState: cartState,
+            addresses: displayAddresses,
+            selectedAddress: selectedAddress,
+            isAddressLoading: (!isCartLoading && isAddressLoading),
+          ),
         );
       },
     );
@@ -173,6 +191,7 @@ class _CheckoutPageState extends State<CheckoutScreen> {
     required CartState cartState,
     required List<AddressEntity> addresses,
     required AddressEntity? selectedAddress,
+    bool isAddressLoading = false,
   }) {
     return SafeArea(
       child: Column(

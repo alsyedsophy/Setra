@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dartz/dartz.dart';
+import 'package:setra/core/errors/error_mapper.dart';
 import 'package:setra/core/errors/exceptions.dart';
 import 'package:setra/core/errors/failures.dart';
 import 'package:setra/features/favorites/data/datasources/favorites_local_data_source.dart';
@@ -25,8 +26,10 @@ class FavoriteRepositoryImpl implements FavoritesRepository {
       final cached = await localDataSource.getCached();
       unawaited(syncFavorites());
       return Right(cached);
-    } on CacheException catch (e) {
-      return Left(CacheFailure(e.message));
+    } on Exceptions catch (e) {
+      return Left(ErrorMapper.mapExceptionToFailure(e));
+    } catch (_) {
+      return Left(UnknownFailure());
     }
   }
 
@@ -46,8 +49,10 @@ class FavoriteRepositoryImpl implements FavoritesRepository {
       await localDataSource.addToOutBox(pending);
       unawaited(syncFavorites());
       return Right(null);
-    } on CacheException catch (e) {
-      return Left(CacheFailure(e.message));
+    } on Exceptions catch (e) {
+      return Left(ErrorMapper.mapExceptionToFailure(e));
+    } catch (_) {
+      return Left(UnknownFailure());
     }
   }
 
@@ -68,8 +73,10 @@ class FavoriteRepositoryImpl implements FavoritesRepository {
       await localDataSource.addToOutBox(pending);
       unawaited(syncFavorites());
       return Right(null);
-    } on CacheException catch (e) {
-      return Left(CacheFailure(e.message));
+    } on Exceptions catch (e) {
+      return Left(ErrorMapper.mapExceptionToFailure(e));
+    } catch (_) {
+      return Left(UnknownFailure());
     }
   }
 
@@ -85,8 +92,10 @@ class FavoriteRepositoryImpl implements FavoritesRepository {
       );
       unawaited(syncFavorites());
       return Right(isFav);
-    } on CacheException catch (e) {
-      return Left(CacheFailure(e.message));
+    } on Exceptions catch (e) {
+      return Left(ErrorMapper.mapExceptionToFailure(e));
+    } catch (_) {
+      return Left(UnknownFailure());
     }
   }
 
@@ -144,12 +153,10 @@ class FavoriteRepositoryImpl implements FavoritesRepository {
       } on AuthException {}
 
       return const Right(null);
-    } on AuthException catch (e) {
-      return Left(AuthFailure(e.message));
-    } on ServerException catch (e) {
-      return Left(NetworkFailure(e.message));
-    } on CacheException catch (e) {
-      return Left(CacheFailure(e.message));
+    } on Exceptions catch (e) {
+      return Left(ErrorMapper.mapExceptionToFailure(e));
+    } catch (_) {
+      return Left(UnknownFailure());
     }
   }
 
@@ -171,6 +178,13 @@ class FavoriteRepositoryImpl implements FavoritesRepository {
   }
 
   @override
-  Stream<List<FavoriteItem>> watchFavorites() =>
-      localDataSource.watch().map((list) => list.cast<FavoriteItem>());
+  Stream<List<FavoriteItem>> watchFavorites() => localDataSource
+      .watch()
+      .map((list) => list.cast<FavoriteItem>())
+      .handleError((error) {
+        if (error is Exceptions) {
+          throw ErrorMapper.mapExceptionToFailure(error);
+        }
+        throw CacheFailure(error.toString());
+      });
 }

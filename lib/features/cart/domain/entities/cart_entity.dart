@@ -13,6 +13,15 @@ class CartEntity extends Equatable {
     required this.items,
   });
 
+  factory CartEntity.empty() {
+    return const CartEntity(
+      id: '',
+      totalPrice: 0.0,
+      totalQuantity: 0,
+      items: [],
+    );
+  }
+
   CartEntity copyWith({
     String? id,
     double? totalPrice,

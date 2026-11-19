@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:setra/core/errors/exceptions.dart'; // تأكد من استيراد ملف الـ Exceptions الخاص بك
+import 'package:setra/core/errors/exceptions_mapper.dart';
 import 'package:setra/features/products/data/models/product_model.dart';
 import 'package:setra/features/products/domain/entities/product_filter.dart';
 import 'package:setra/features/products/domain/entities/product_sort.dart';
@@ -78,10 +79,8 @@ class ProductsRemoteDataSourceImpl implements ProductsRemoteDataSource {
       }
 
       return products;
-    } on FirebaseException catch (e) {
-      throw _handleFirebaseException(e);
     } catch (e) {
-      throw ServerException(message: e.toString());
+      throw ExceptionsMapper.handleUnknowException(e);
     }
   }
 
@@ -96,7 +95,7 @@ class ProductsRemoteDataSourceImpl implements ProductsRemoteDataSource {
           .map((doc) => ProductModel.fromFirestore(doc.data(), docId: doc.id))
           .toList();
     } catch (e) {
-      throw ServerException(message: e.toString());
+      throw ExceptionsMapper.handleUnknowException(e);
     }
   }
 
@@ -111,10 +110,8 @@ class ProductsRemoteDataSourceImpl implements ProductsRemoteDataSource {
         doc.data() as Map<String, dynamic>,
         docId: doc.id,
       );
-    } on FirebaseException catch (e) {
-      throw _handleFirebaseException(e);
     } catch (e) {
-      throw ServerException(message: e.toString());
+      throw ExceptionsMapper.handleUnknowException(e);
     }
   }
 
@@ -165,10 +162,8 @@ class ProductsRemoteDataSourceImpl implements ProductsRemoteDataSource {
       }
 
       return relatedMap.values.take(limit).toList();
-    } on FirebaseException catch (e) {
-      throw _handleFirebaseException(e);
     } catch (e) {
-      throw ServerException(message: e.toString());
+      throw ExceptionsMapper.handleUnknowException(e);
     }
   }
 
@@ -214,18 +209,5 @@ class ProductsRemoteDataSourceImpl implements ProductsRemoteDataSource {
       query = query.where('tags', arrayContainsAny: tags);
     }
     return query;
-  }
-
-  Exceptions _handleFirebaseException(FirebaseException e) {
-    switch (e.code) {
-      case 'permission-denied':
-        return AuthException(message: 'Permission denied');
-      case 'unavailable':
-        return NetworkException(message: 'No internet connection');
-      case 'not-found':
-        return ServerException(message: 'Document not found');
-      default:
-        return ServerException(message: e.message ?? 'Server error');
-    }
   }
 }

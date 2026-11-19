@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:setra/core/errors/exceptions.dart';
+import 'package:setra/core/errors/exceptions_mapper.dart';
 import 'package:setra/features/favorites/data/models/favorite_model.dart';
 
 abstract class FavoritesRemoteDataSource {
@@ -30,8 +31,7 @@ class FavoritesRemoteDataSourceImpl implements FavoritesRemoteDataSource {
   CollectionReference get _favCollection =>
       _firestore.collection('users').doc(_uid).collection('favorites');
 
-  String _docId(String pid, String? vid) =>
-      vid == null ? pid : '${pid}_$vid';
+  String _docId(String pid, String? vid) => vid == null ? pid : '${pid}_$vid';
 
   @override
   Future<List<FavoriteItemModel>> getFavorites() async {
@@ -44,8 +44,8 @@ class FavoritesRemoteDataSourceImpl implements FavoritesRemoteDataSource {
             ),
           )
           .toList();
-    } on FirebaseException catch (e) {
-      throw ServerException(message: e.message ?? 'Failed To Get Favorites');
+    } catch (e) {
+      throw ExceptionsMapper.handleUnknowException(e);
     }
   }
 
@@ -56,8 +56,8 @@ class FavoritesRemoteDataSourceImpl implements FavoritesRemoteDataSource {
       await _favCollection
           .doc(doc)
           .set(item.toFirestore(), SetOptions(merge: true));
-    } on FirebaseException catch (e) {
-      throw ServerException(message: e.message ?? 'Failed to Add This Item');
+    } catch (e) {
+      throw ExceptionsMapper.handleUnknowException(e);
     }
   }
 
@@ -66,8 +66,8 @@ class FavoritesRemoteDataSourceImpl implements FavoritesRemoteDataSource {
     try {
       final doc = _docId(productId, variantId);
       await _favCollection.doc(doc).delete();
-    } on FirebaseException catch (e) {
-      throw ServerException(message: e.message ?? 'Failed To Remove Item');
+    } catch (e) {
+      throw ExceptionsMapper.handleUnknowException(e);
     }
   }
 
@@ -81,10 +81,8 @@ class FavoritesRemoteDataSourceImpl implements FavoritesRemoteDataSource {
         batch.set(ref, item.toFirestore(), SetOptions(merge: true));
       }
       batch.commit();
-    } on FirebaseException catch (e) {
-      throw ServerException(
-        message: e.message ?? 'Failed To Merge Guest Favorites',
-      );
+    } catch (e) {
+      throw ExceptionsMapper.handleUnknowException(e);
     }
   }
 }

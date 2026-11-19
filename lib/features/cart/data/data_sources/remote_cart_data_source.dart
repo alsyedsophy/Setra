@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:setra/core/errors/exceptions.dart';
+import 'package:setra/core/errors/exceptions_mapper.dart';
 import 'package:setra/features/cart/data/models/cart_model.dart';
 
 abstract class RemoteCartDataSource {
@@ -114,11 +115,9 @@ class RemoteCartDataSourceImpl implements RemoteCartDataSource {
         }
       });
       log('Added Item successfull at data source');
-    } on AuthException {
-      rethrow;
     } catch (e) {
       log('Failure to Added Item at data source');
-      throw ServerException(message: 'Failed to add item to cart');
+      throw ExceptionsMapper.handleUnknowException(e);
     }
   }
 
@@ -159,7 +158,7 @@ class RemoteCartDataSourceImpl implements RemoteCartDataSource {
       log('Added Item successfull at data source');
     } catch (e) {
       log('Failure to remove item from data source');
-      throw ServerException(message: 'Failed to remove item from cart');
+      throw ExceptionsMapper.handleUnknowException(e);
     }
   }
 
@@ -220,7 +219,7 @@ class RemoteCartDataSourceImpl implements RemoteCartDataSource {
       });
       log('Added Item successfull at data source');
     } catch (e) {
-      throw ServerException(message: 'Failed to update cart item');
+      throw ExceptionsMapper.handleUnknowException(e);
     }
   }
 
@@ -243,13 +242,10 @@ class RemoteCartDataSourceImpl implements RemoteCartDataSource {
             return CartModel.fromFireStore(snapshot.data()!);
           })
           .handleError((error) {
-            if (error is AuthException) {
-              throw error;
-            }
-            throw ServerException(message: 'Failed to get cart items');
+            throw ExceptionsMapper.handleUnknowException(error);
           });
-    } on AuthException {
-      return Stream.error(AuthException(message: 'User must be authenticated'));
+    } catch (e) {
+      return Stream.error(ExceptionsMapper.handleUnknowException(e));
     }
   }
 
@@ -285,11 +281,9 @@ class RemoteCartDataSourceImpl implements RemoteCartDataSource {
         transaction.set(_cartDoc, cart.toFireStore());
       });
       log('replaceCart successful');
-    } on AuthException {
-      rethrow;
     } catch (e) {
       log('Failure replaceCart: $e');
-      throw ServerException(message: 'Failed to sync cart');
+      throw ExceptionsMapper.handleUnknowException(e);
     }
   }
 }

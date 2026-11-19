@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:setra/core/errors/error_mapper.dart';
 import 'package:setra/core/errors/exceptions.dart';
 import 'package:setra/core/errors/failures.dart';
 import 'package:setra/core/network/network_info.dart';
@@ -43,14 +44,8 @@ class CategoryRepositoryImpl implements CategoryRepository {
     try {
       final result = await call();
       return Right(result);
-    } on AuthException catch (e) {
-      return Left(AuthFailure(e.message));
-    } on NetworkException catch (e) {
-      return Left(NetworkFailure(e.message));
-    } on ValidationException catch (e) {
-      return Left(ValidationFailure(e.message));
-    } on ServerException catch (e) {
-      return Left(ServerFailure(e.message));
+    } on Exceptions catch (e) {
+      return Left(ErrorMapper.mapExceptionToFailure(e));
     } catch (_) {
       return Left(UnknownFailure());
     }

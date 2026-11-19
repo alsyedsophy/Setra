@@ -6,6 +6,7 @@ import 'package:setra/features/category/presentation/cubit/category_cubit.dart';
 import 'package:setra/features/category/presentation/cubit/category_state.dart';
 import 'package:setra/features/home/presentation/widgets/category_home_banner.dart';
 import 'package:setra/features/home/presentation/widgets/product_category_list.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class CategorySection extends StatefulWidget {
   const CategorySection({super.key});
@@ -25,25 +26,32 @@ class _CategorySectionState extends State<CategorySection> {
   Widget build(BuildContext context) {
     return BlocBuilder<CategoryCubit, CategoryState>(
       builder: (context, state) {
+        final isLoading =
+            state.status == CategoryStatus.loading ||
+            state.status == CategoryStatus.initial;
+
         if (state.categories.isEmpty) {
           return const SizedBox.shrink();
         }
 
-        return ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: state.categories.length,
-          itemBuilder: (context, index) {
-            log(state.categories.length.toString());
-            final category = state.categories[index];
-            log(category.id);
-            return Column(
-              children: [
-                CategoryHomeBanner(category: category),
-                ProductCategoryList(categoryId: category.id),
-              ],
-            );
-          },
+        return Skeletonizer(
+          enabled: isLoading,
+          child: ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: state.categories.length,
+            itemBuilder: (context, index) {
+              log(state.categories.length.toString());
+              final category = state.categories[index];
+              log(category.id);
+              return Column(
+                children: [
+                  CategoryHomeBanner(category: category),
+                  ProductCategoryList(categoryId: category.id),
+                ],
+              );
+            },
+          ),
         );
       },
     );

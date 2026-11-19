@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:setra/core/components/app_loading.dart';
 import 'package:setra/core/design_system/app_spacing.dart';
 import 'package:setra/core/extensions/extensions.dart';
 import 'package:setra/core/extensions/num_extensions.dart';
@@ -16,6 +15,7 @@ import 'package:setra/features/profile/presentation/cubit/profile_states.dart';
 import 'package:setra/features/profile/presentation/widgets/logout_widget.dart';
 import 'package:setra/features/profile/presentation/widgets/profile_image_avatar.dart';
 import 'package:setra/features/profile/presentation/widgets/profile_section_tile.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -56,27 +56,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       body: BlocBuilder<ProfileCubit, ProfileState>(
         builder: (context, state) {
-          if (state.status == ProfileStatus.initial ||
-              state.status == ProfileStatus.loading) {
-            return AppLoading();
-          }
           if (state.status == ProfileStatus.failure) {
-            return AppErrorView(message: 'sdfg ${state.errorMessage!}');
+            return AppErrorView(message: ' ${state.errorMessage!}');
           }
-          if (state.status == ProfileStatus.loaded ||
-              state.status == ProfileStatus.updating) {
-            if (state.profile == null) {
-              return AppEmptyView(
-                message: 'Profile data is unavailable',
-                icon: Icons.person_2_outlined,
-              );
-            }
-            return _buildProfileContent(
-              state.profile!,
-              // isUpdating: state.status == ProfileStatus.updating,
+
+          final isLoading =
+              state.status == ProfileStatus.loading ||
+              state.status == ProfileStatus.initial;
+
+          if (!isLoading && state.profile == null) {
+            return AppEmptyView(
+              message: 'Profile data is unavailable',
+              icon: Icons.person_2_outlined,
             );
           }
-          return SizedBox.shrink();
+
+          final displayProfile = isLoading && state.profile == null
+              ? ProfileEntity.empty()
+              : state.profile!;
+
+          return Skeletonizer(
+            enabled: isLoading,
+            child: IgnorePointer(
+              ignoring: isLoading,
+              child: _buildProfileContent(displayProfile),
+            ),
+          );
         },
       ),
     );

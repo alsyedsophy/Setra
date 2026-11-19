@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:setra/core/errors/exceptions.dart';
+import 'package:setra/core/errors/exceptions_mapper.dart';
 import 'package:setra/features/address/data/models/address_model.dart';
 
 abstract class RemoteAddressDataSource {
@@ -43,11 +44,9 @@ class RemoteAddressDataSourceImpl implements RemoteAddressDataSource {
       return snapshot.docs
           .map((doc) => AddressModel.fromFirestore(doc.data(), id: doc.id))
           .toList();
-    } on AuthException {
-      rethrow;
     } catch (e) {
       log('getAddresses error: $e');
-      throw ServerException(message: 'فشل جلب العناوين');
+      throw ExceptionsMapper.handleUnknowException(e);
     }
   }
 
@@ -63,11 +62,9 @@ class RemoteAddressDataSourceImpl implements RemoteAddressDataSource {
 
       final doc = snapshot.docs.first;
       return AddressModel.fromFirestore(doc.data(), id: doc.id);
-    } on AuthException {
-      rethrow;
     } catch (e) {
       log('getDefaultAddress error: $e');
-      throw ServerException(message: 'فشل جلب العنوان الافتراضي');
+      throw ExceptionsMapper.handleUnknowException(e);
     }
   }
 
@@ -109,11 +106,9 @@ class RemoteAddressDataSourceImpl implements RemoteAddressDataSource {
         transaction.set(docRef, model.toFirestore());
         return model;
       });
-    } on AuthException {
-      rethrow;
     } catch (e) {
       log('addAddress error: $e');
-      throw ServerException(message: 'فشل إضافة العنوان');
+      throw ExceptionsMapper.handleUnknowException(e);
     }
   }
 
@@ -159,13 +154,9 @@ class RemoteAddressDataSourceImpl implements RemoteAddressDataSource {
         transaction.update(docRef, updated.toFirestore());
         return updated;
       });
-    } on AuthException {
-      rethrow;
-    } on ServerException {
-      rethrow;
     } catch (e) {
       log('updateAddress error: $e');
-      throw ServerException(message: 'فشل تحديث العنوان');
+      throw ExceptionsMapper.handleUnknowException(e);
     }
   }
 
@@ -197,13 +188,9 @@ class RemoteAddressDataSourceImpl implements RemoteAddressDataSource {
           }
         }
       });
-    } on AuthException {
-      rethrow;
-    } on ServerException {
-      rethrow;
     } catch (e) {
       log('deleteAddress error: $e');
-      throw ServerException(message: 'فشل حذف العنوان');
+      throw ExceptionsMapper.handleUnknowException(e);
     }
   }
 
@@ -224,13 +211,9 @@ class RemoteAddressDataSourceImpl implements RemoteAddressDataSource {
           transaction.update(doc.reference, {'is_default': isTarget});
         }
       });
-    } on AuthException {
-      rethrow;
-    } on ServerException {
-      rethrow;
     } catch (e) {
       log('setDefaultAddress error: $e');
-      throw ServerException(message: 'فشل تعيين العنوان الافتراضي');
+      throw ExceptionsMapper.handleUnknowException(e);
     }
   }
 }

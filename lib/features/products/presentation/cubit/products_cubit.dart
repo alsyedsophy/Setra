@@ -18,9 +18,12 @@ class ProductsCubit extends Cubit<ProductsState> {
   ) : super(const ProductsState());
 
   Future<void> loadProducts() async {
+    if (isClosed) return;
     emit(state.copyWith(status: ProductsStatus.loading, clearError: true));
 
     final result = await _getProducts(filter: state.filter, sort: state.sort);
+
+    if (isClosed) return;
 
     result.fold(
       (failure) => emit(

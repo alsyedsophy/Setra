@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:setra/core/components/components.dart';
 import 'package:setra/core/extensions/context_extensions.dart';
 import 'package:setra/core/routing/routing.dart';
 import 'package:setra/core/widgets/widgets.dart';
+import 'package:setra/features/orders/domain/entities/order_entity.dart';
 
 import 'package:setra/features/orders/presentation/cubits/orders_cubit.dart';
 import 'package:setra/features/orders/presentation/cubits/orders_state.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../widgets/orders_list.dart';
 
@@ -73,10 +74,6 @@ class _OrdersScreenState extends State<OrdersScreen> {
   // ─────────────────────────── Body ───────────────────────────
 
   Widget _buildBody(BuildContext context, OrdersState state) {
-    if (state is OrdersInitial || state is OrdersLoading) {
-      return AppLoading();
-    }
-
     if (state is OrdersEmpty) {
       return AppEmptyView(
         message: 'No Orders yet',
@@ -93,18 +90,27 @@ class _OrdersScreenState extends State<OrdersScreen> {
       );
     }
 
-    if (state is OrdersLoaded) {
-      return OrdersList(orders: state.orders);
-    }
+    final isLoading = state is OrdersInitial || state is OrdersLoading;
 
-    if (state is OrderCancelling) {
-      return OrdersList(orders: state.orders, cancellingOrderId: state.orderId);
-    }
+    final List<OrderEntity> displayOrders = switch (state) {
+      OrdersLoaded s => s.orders,
+      OrderCancelling s => s.orders,
+      OrderCancelled s => s.orders,
+      _ => List.generate(5, (index) => OrderEntity.empty()),
+    };
 
-    if (state is OrderCancelled) {
-      return OrdersList(orders: state.orders);
-    }
+    final String? cancellingOrderId = switch (state) {
+      OrderCancelling s => s.orderId,
+      _ => null,
+    };
 
-    return const SizedBox.shrink();
+    return Skeletonizer(
+      enabled: isLoading,
+      child: OrdersList(
+        orders: displayOrders,
+        cancellingOrderId: cancellingOrderId,
+      ),
+    );
+
   }
 }

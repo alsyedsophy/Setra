@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:setra/core/components/app_loading.dart';
 import 'package:setra/core/design_system/design_system.dart';
 import 'package:setra/core/extensions/extensions.dart';
 import 'package:setra/core/widgets/app_empty_view.dart';
@@ -13,6 +12,7 @@ import 'package:setra/features/category/presentation/cubit/category_cubit.dart';
 import 'package:setra/features/category/presentation/cubit/category_state.dart';
 import 'package:setra/features/home/presentation/widgets/category_home_banner.dart';
 import 'package:setra/features/home/presentation/widgets/custom_home_drawer.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class ProductsGenderScreen extends StatefulWidget {
   const ProductsGenderScreen({super.key, required this.gender});
@@ -38,19 +38,28 @@ class _ProductsGenderScreenState extends State<ProductsGenderScreen> {
       body: BlocBuilder<CategoryCubit, CategoryState>(
         builder: (context, state) {
           log(state.status.toString());
-          if (state.status == CategoryStatus.initial ||
-              state.status == CategoryStatus.loading) {
-            return const AppLoading();
-          }
+
           if (state.status == CategoryStatus.error) {
             return AppErrorView(message: state.errorMessage!);
           }
+
           if (state.status == CategoryStatus.loaded &&
               state.categories.isEmpty) {
             return const AppEmptyView(message: "No Products Now");
           }
 
-          return _CategoryBanners(categories: state.categories);
+          final isLoading =
+              state.status == CategoryStatus.initial ||
+              state.status == CategoryStatus.loading;
+
+          final displayCategories = isLoading && state.categories.isEmpty
+              ? List.generate(3, (index) => CategoryEntity.empty())
+              : state.categories;
+
+          return _CategoryBanners(
+            categories: displayCategories,
+            isLoading: isLoading,
+          );
         },
       ),
     );
@@ -58,9 +67,10 @@ class _ProductsGenderScreenState extends State<ProductsGenderScreen> {
 }
 
 class _CategoryBanners extends StatelessWidget {
-  const _CategoryBanners({required this.categories});
+  const _CategoryBanners({required this.categories, required this.isLoading});
 
   final List<CategoryEntity> categories;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -93,27 +103,31 @@ class _CategoryBanners extends StatelessWidget {
       desktop: 1200,
     );
 
+    //  موبايل: عمود واحد
     if (columns == 1) {
-      return SingleChildScrollView(
-        padding: outerPadding,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            for (final category in categories)
-              Padding(
-                padding: EdgeInsets.only(bottom: gap),
-                child: CategoryHomeBanner(
-                  category: category,
-                  height: imageHeight,
+      return Skeletonizer(
+        enabled: isLoading, //  enableSwitchAnimation محذوفة (الافتراضي true)
+        child: SingleChildScrollView(
+          padding: outerPadding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              for (final category in categories)
+                Padding(
+                  padding: EdgeInsets.only(bottom: gap),
+                  child: CategoryHomeBanner(
+                    category: category,
+                    height: imageHeight,
+                  ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       );
     }
 
-    //  تابلت/ديسكتوب: شبكة بارتفاع ثابت
-    // نضيف هامش تقديري لارتفاع العنوان (اسم القسم + المسافة)
+    //  تابلت/ديسكتوب: شبكة بارتفاع ثابت،
+    //  و أيضًا مغلّفة بـ Skeletonizer (المشكلة 2)
     final double tileHeight = imageHeight + AppSpacing.h_4 + 32;
 
     final Widget grid = GridView.builder(
@@ -133,10 +147,13 @@ class _CategoryBanners extends StatelessWidget {
       },
     );
 
-    return Center(
-      child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: maxWidth),
-        child: grid,
+    return Skeletonizer(
+      enabled: isLoading,
+      child: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: maxWidth),
+          child: grid,
+        ),
       ),
     );
   }

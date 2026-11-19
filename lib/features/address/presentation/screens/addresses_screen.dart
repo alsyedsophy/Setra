@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:setra/core/components/app_loading.dart';
 import 'package:setra/core/design_system/app_spacing.dart';
 import 'package:setra/core/extensions/num_extensions.dart';
 import 'package:setra/core/routing/route_paths.dart';
 import 'package:setra/core/widgets/app_empty_view.dart';
 import 'package:setra/core/widgets/app_error_view.dart';
+import 'package:setra/features/address/domain/entities/address_entity.dart';
 import 'package:setra/features/address/presentation/cubits/address_cubit.dart';
 import 'package:setra/features/address/presentation/cubits/address_state.dart';
 import 'package:setra/features/address/presentation/widgets/address_card.dart';
-import 'package:setra/features/home/presentation/widgets/custom_home_drawer.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class AddressesScreen extends StatefulWidget {
   const AddressesScreen({super.key});
@@ -48,21 +48,18 @@ class _AddressesScreenState extends State<AddressesScreen> {
           if (state.successMessage != null) {
             ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
-              ..showSnackBar(SnackBar(content: Text(state.successMessage!)));
+              ..showSnackBar(SnackBar(content: Text(state.successMessage!),behavior: SnackBarBehavior.floating,));
             context.read<AddressCubit>().clearMessages();
           } else if (state.errorMessage != null &&
               state.status == AddressStatus.error) {
             ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
-              ..showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+              ..showSnackBar(SnackBar(content: Text(state.errorMessage!), behavior: SnackBarBehavior.floating,));
             context.read<AddressCubit>().clearMessages();
           }
         },
         builder: (context, state) {
-          if (state.status == AddressStatus.loading &&
-              state.addresses.isEmpty) {
-            return const AppLoading();
-          }
+          
 
           if (state.status == AddressStatus.error && state.addresses.isEmpty) {
             return AppErrorView(
@@ -78,37 +75,46 @@ class _AddressesScreenState extends State<AddressesScreen> {
             );
           }
 
-          return RefreshIndicator(
-            onRefresh: () => context.read<AddressCubit>().loadAddresses(),
-            child: ListView.separated(
-              padding: EdgeInsets.fromLTRB(
-                AppSpacing.w_16,
-                AppSpacing.h_16,
-                AppSpacing.w_16,
-                AppSpacing.h_88,
+          final isLoading = state.status == AddressStatus.initial ||
+              state.status == AddressStatus.loading;
+
+              final displayAddresses = isLoading && state.addresses.isEmpty
+              ? List.generate(3, (index) => AddressEntity.empty()) : state.addresses;
+
+          return Skeletonizer(
+            enabled: isLoading,
+            child: RefreshIndicator(
+              onRefresh: () => context.read<AddressCubit>().loadAddresses(),
+              child: ListView.separated(
+                padding: EdgeInsets.fromLTRB(
+                  AppSpacing.w_16,
+                  AppSpacing.h_16,
+                  AppSpacing.w_16,
+                  AppSpacing.h_88,
+                ),
+                itemCount: displayAddresses.length,
+                separatorBuilder: (_, _) => AppSpacing.h_16.hSpace,
+                itemBuilder: (context, index) {
+                  final address = displayAddresses[index];
+                  return AddressCard(
+                    address: address,
+                    selected: state.selectedAddress?.id == address.id,
+                    onTap: () {
+                      context.read<AddressCubit>().selectAddress(address);
+                    },
+                    onEdit: () {
+                      context.pushNamed(
+                        RoutePaths.addressFormName,
+                        extra: address,
+                      );
+                    },
+                    onDelete: () => _confirmDelete(context, address.id),
+                    onSetDefault: () {
+                      context.read<AddressCubit>().setDefault(address.id);
+                    },
+                  );
+                },
               ),
-              itemCount: state.addresses.length,
-              separatorBuilder: (_, _) => AppSpacing.h_16.hSpace,
-              itemBuilder: (context, index) {
-                final address = state.addresses[index];
-                return AddressCard(
-                  address: address,
-                  selected: state.selectedAddress?.id == address.id,
-                  onTap: () {
-                    context.read<AddressCubit>().selectAddress(address);
-                  },
-                  onEdit: () {
-                    context.pushNamed(
-                      RoutePaths.addressFormName,
-                      extra: address,
-                    );
-                  },
-                  onDelete: () => _confirmDelete(context, address.id),
-                  onSetDefault: () {
-                    context.read<AddressCubit>().setDefault(address.id);
-                  },
-                );
-              },
             ),
           );
         },

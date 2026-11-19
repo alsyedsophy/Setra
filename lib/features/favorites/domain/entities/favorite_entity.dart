@@ -17,6 +17,17 @@ class FavoriteItem extends Equatable {
     required this.addedAt,
   });
 
+  factory FavoriteItem.empty() {
+    return FavoriteItem(
+      productId: '',
+      variantId: null,
+      name: '',
+      imageUrl: '',
+      price: 0.0,
+      addedAt: DateTime.now(),
+    );
+  }
+
   /// Unique key for deduplication
   String get key => variantId == null ? productId : '${productId}_$variantId';
 

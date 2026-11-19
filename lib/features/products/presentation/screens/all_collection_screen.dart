@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:setra/core/components/app_loading.dart';
 import 'package:setra/core/design_system/design_system.dart';
 import 'package:setra/core/extensions/extensions.dart';
 import 'package:setra/core/responsive/responsive.dart';
@@ -13,9 +12,10 @@ import 'package:setra/features/products/presentation/cubit/products_cubit.dart';
 import 'package:setra/features/products/presentation/cubit/products_state.dart';
 import 'package:setra/features/products/presentation/widgets/app_bar_filter_widget.dart';
 import 'package:setra/features/products/presentation/widgets/custom_products_sort_sheet.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
-class ProductsListScreen extends StatelessWidget {
-  const ProductsListScreen({super.key});
+class AllCollectionScreen extends StatelessWidget {
+  const AllCollectionScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +33,9 @@ class ProductsListScreen extends StatelessWidget {
       drawer: CustomHomeDrawer(),
       body: BlocBuilder<ProductsCubit, ProductsState>(
         builder: (context, state) {
-          if (state.status == ProductsStatus.loading &&
-              state.products.isEmpty) {
-            return const AppLoading();
-          }
+          final isLoading =
+              state.status == ProductsStatus.loading ||
+              state.status == ProductsStatus.initial;
 
           if (state.status == ProductsStatus.failure &&
               state.products.isEmpty) {
@@ -48,9 +47,17 @@ class ProductsListScreen extends StatelessWidget {
             return const AppEmptyView(message: "Not Products");
           }
 
+          final List<ProductEntity> displayProducts =
+              isLoading && state.products.isEmpty
+              ? List.generate(8, (index) => ProductEntity.empty())
+              : state.products;
+
           return RefreshIndicator(
             onRefresh: () => context.read<ProductsCubit>().refresh(),
-            child: ProductsGrid(products: state.products),
+            child: Skeletonizer(
+              enabled: isLoading,
+              child: ProductsGrid(products: displayProducts),
+            ),
           );
         },
       ),

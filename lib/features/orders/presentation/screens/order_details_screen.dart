@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:setra/core/components/app_loading.dart';
-import 'package:setra/core/widgets/app_empty_view.dart';
 import 'package:setra/core/widgets/widgets.dart';
+import 'package:setra/features/orders/domain/entities/order_entity.dart';
 
 import 'package:setra/features/orders/presentation/cubits/order_details_cubit.dart';
 import 'package:setra/features/orders/presentation/cubits/order_details_state.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../widgets/order_details/order_details_content.dart';
 
@@ -85,14 +86,29 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       );
     }
 
-    if (state is OrderDetailsLoaded) {
-      return OrderDetailsContent(order: state.order, onCancelOrder: onCancel);
-    }
+    final isLoadeing = state is OrderDetailsInitial || state is OrderDetailsLoading;
 
-    if (state is OrderDetailsCancelling) {
+    final isCancelling = state is OrderDetailsCancelling;
+
+    final OrderEntity displayOrders = switch (state) {
+      OrderDetailsLoaded s => s.order,
+      OrderDetailsCancelling s => s.order,
+      OrderDetailsCancelled s => s.order,
+      _ =>  OrderEntity.empty(),
+    };
+    
+    final Widget content = Skeletonizer(
+      enabled: isLoadeing,
+      child: OrderDetailsContent(
+        order: displayOrders,
+        onCancelOrder: onCancel,
+      ),
+    );
+
+    if(isCancelling){
       return Stack(
         children: [
-          OrderDetailsContent(order: state.order, onCancelOrder: onCancel),
+          content,
           Container(
             color: Colors.black.withValues(alpha: 0.25),
             child: const Center(
@@ -103,10 +119,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       );
     }
 
-    if (state is OrderDetailsCancelled) {
-      return OrderDetailsContent(order: state.order, onCancelOrder: onCancel);
-    }
+    return content;
 
-    return const SizedBox.shrink();
+    
   }
 }

@@ -1,5 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:setra/core/components/app_loading.dart';
 
 import '../design_system/design_system.dart';
 
@@ -25,39 +25,23 @@ class AppNetworkImage extends StatelessWidget {
 
     return ClipRRect(
       borderRadius: borderRadius == 0 ? BorderRadius.zero : AppRadius.mdRadius,
-      child: Image.network(
-        imageUrl,
+      child: CachedNetworkImage(
+        imageUrl: imageUrl,
         width: width,
         height: height,
         fit: fit,
-        loadingBuilder:
-            (
-              BuildContext context,
-              Widget child,
-              ImageChunkEvent? loadingProgress,
-            ) {
-              if (loadingProgress == null) {
-                return child;
-              }
-              return SizedBox(
-                width: width,
-                height: height,
-                child: const AppLoading(),
-              );
-            },
-        errorBuilder:
-            (BuildContext context, Object error, StackTrace? stackTrace) {
-              return Container(
-                width: width,
-                height: height,
-                color: theme.colorScheme.surfaceContainerHighest,
-                alignment: Alignment.center,
-                child: Icon(
-                  Icons.broken_image_outlined,
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              );
-            },
+
+        // placeholder: (context, url) => CircularProgressIndicator(),
+        errorWidget: (context, url, error) => Container(
+          width: width,
+          height: height,
+          color: theme.colorScheme.surfaceContainerHighest,
+          alignment: Alignment.center,
+          child: Icon(
+            Icons.broken_image_outlined,
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
       ),
     );
   }

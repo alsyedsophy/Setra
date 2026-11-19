@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
+import 'package:setra/core/errors/error_mapper.dart';
+import 'package:setra/core/errors/exceptions.dart';
 import 'package:setra/core/errors/failures.dart';
 import 'package:setra/core/network/network_info.dart';
 import 'package:setra/features/orders/data/data_sources/order_remote_data_source.dart';
@@ -18,35 +20,35 @@ class OrderRepositoryImpl implements OrderRepository {
     required this.networkInfo,
   });
 
-  Future<Either<Failure, T>> _execute<T>(Future<T> Function() action) async {
+  Future<Either<Failure, T>> _handleCall<T>(Future<T> Function() action) async {
     try {
       if (!await networkInfo.isConnected) {
         return Left(NetworkFailure());
       }
 
       return Right(await action());
-    } on FirebaseException {
-      return Left(ServerFailure());
-    } catch (_) {
-      return Left(ServerFailure());
+    } on Exceptions catch (e) {
+      return Left(ErrorMapper.mapExceptionToFailure(e));
+    } catch (e) {
+      return Left(UnknownFailure(e.toString()));
     }
   }
 
   @override
   Future<Either<Failure, OrderEntity>> createOrder(OrderEntity order) {
-    return _execute(
+    return _handleCall(
       () => remoteDataSource.createOrder(OrderModel.fromEntity(order)),
     );
   }
 
   @override
   Future<Either<Failure, OrderEntity>> getOrderById(String orderId) {
-    return _execute(() => remoteDataSource.getOrderById(orderId));
+    return _handleCall(() => remoteDataSource.getOrderById(orderId));
   }
 
   @override
   Future<Either<Failure, List<OrderEntity>>> getUserOrders() {
-    return _execute(() => remoteDataSource.getUserOrders());
+    return _handleCall(() => remoteDataSource.getUserOrders());
   }
 
   @override
@@ -60,10 +62,10 @@ class OrderRepositoryImpl implements OrderRepository {
       await for (final order in remoteDataSource.watchOrder(orderId)) {
         yield Right(order);
       }
-    } on FirebaseException {
-      yield Left(ServerFailure());
-    } catch (_) {
-      yield Left(ServerFailure());
+    } on Exceptions catch (e) {
+      yield Left(ErrorMapper.mapExceptionToFailure(e));
+    } catch (e) {
+      yield Left(UnknownFailure(e.toString()));
     }
   }
 
@@ -78,16 +80,16 @@ class OrderRepositoryImpl implements OrderRepository {
       await for (final orders in remoteDataSource.watchUserOrders()) {
         yield Right(orders);
       }
-    } on FirebaseException {
-      yield Left(ServerFailure());
-    } catch (_) {
-      yield Left(ServerFailure());
+    } on Exceptions catch (e) {
+      yield Left(ErrorMapper.mapExceptionToFailure(e));
+    } catch (e) {
+      yield Left(UnknownFailure(e.toString()));
     }
   }
 
   @override
   Future<Either<Failure, void>> cancelOrder(String orderId) {
-    return _execute(() async {
+    return _handleCall(() async {
       await remoteDataSource.cancelOrder(orderId);
     });
   }

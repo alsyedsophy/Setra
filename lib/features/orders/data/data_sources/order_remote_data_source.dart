@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:setra/core/errors/exceptions.dart';
+import 'package:setra/core/errors/exceptions_mapper.dart';
 import 'package:setra/features/orders/data/models/order_model.dart';
 import 'package:setra/features/orders/domain/entities/order_status.dart';
 
@@ -178,11 +179,9 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
       });
 
       return order;
-    } on AuthException {
-      rethrow;
     } catch (e) {
       log('================ cached Error $e ==========');
-      throw ServerException(message: 'Faild to create order');
+      throw ExceptionsMapper.handleUnknowException(e);
     }
   }
 
@@ -199,12 +198,8 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
         doc.data() as Map<String, dynamic>,
         doc.id,
       );
-    } on AuthException {
-      rethrow;
-    } on FirebaseException catch (e) {
-      throw ServerException(message: e.message ?? 'Failed to get order');
     } catch (e) {
-      throw ServerException(message: e.toString());
+      throw ExceptionsMapper.handleUnknowException(e);
     }
   }
 
@@ -221,12 +216,8 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
       return snapshot.docs
           .map((doc) => OrderModel.fromFirestore(doc.data(), doc.id))
           .toList();
-    } on AuthException {
-      rethrow;
     } catch (e) {
-      throw ServerException(
-        message: 'Failed to get user orders: ${e.toString()}',
-      );
+      throw ExceptionsMapper.handleUnknowException(e);
     }
   }
 
@@ -236,21 +227,19 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
       final uid = _uid;
       await for (final snapshot in _ordersCollection.doc(orderId).snapshots()) {
         if (!snapshot.exists) {
-          throw Exception('Order not found.');
+          throw ServerException(message: 'Order not found.');
         }
 
         final data = snapshot.data()!;
 
         if (data['userId'] != uid) {
-          throw Exception('Access denied.');
+          throw ServerException(message: 'Access denied.');
         }
 
         yield OrderModel.fromFirestore(data, snapshot.id);
       }
-    } on FirebaseException {
-      rethrow;
     } catch (e) {
-      rethrow;
+      throw ExceptionsMapper.handleUnknowException(e);
     }
   }
 
@@ -267,11 +256,9 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
           return OrderModel.fromFirestore(doc.data(), doc.id);
         }).toList();
       }
-    } on FirebaseException {
-      rethrow;
     } catch (e) {
       log('========================== $e ==============');
-      rethrow;
+      throw ExceptionsMapper.handleUnknowException(e);
     }
   }
 
@@ -313,12 +300,8 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
           'updatedAt': FieldValue.serverTimestamp(),
         });
       });
-    } on FirebaseException catch (e) {
-      throw ServerException(message: e.message ?? 'Failed to cancel order');
-    } on ServerException {
-      rethrow;
     } catch (e) {
-      throw ServerException(message: e.toString());
+      throw ExceptionsMapper.handleUnknowException(e);
     }
   }
 }

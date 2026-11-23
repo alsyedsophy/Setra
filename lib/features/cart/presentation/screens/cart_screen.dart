@@ -1,21 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:setra/core/components/app_button.dart';
-import 'package:setra/core/design_system/app_spacing.dart';
-import 'package:setra/core/extensions/num_extensions.dart';
-import 'package:setra/core/extensions/widget_extensions.dart';
-import 'package:setra/core/routing/routing.dart';
-import 'package:setra/core/widgets/app_empty_view.dart';
-import 'package:setra/core/widgets/app_error_view.dart';
-import 'package:setra/features/cart/domain/entities/cart_entity.dart';
 import 'package:setra/features/cart/domain/entities/cart_validation_result.dart';
 import 'package:setra/features/cart/presentation/cubits/cart_cubit.dart';
 import 'package:setra/features/cart/presentation/cubits/cart_state.dart';
-import 'package:setra/features/cart/presentation/widgets/cart_item_card.dart';
+import 'package:setra/features/cart/presentation/view/cart_body.dart';
 import 'package:setra/features/home/presentation/widgets/custom_home_drawer.dart';
-import 'package:setra/features/products/domain/entities/product_entity.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -76,59 +65,7 @@ class CartScreen extends StatelessWidget {
         listener: (context, state) {
           _showValidationSnackBars(context, state.validationChanges);
         },
-        builder: (context, state) {
-          
-          if (state.status == CartStatus.error) {
-            return AppErrorView(
-              message: state.errorMessage ?? 'An error occurred',
-            );
-          }
-          final isLoading = state.status == CartStatus.initial ||
-              state.status == CartStatus.loading;
-
-          if (!isLoading && state.status == CartStatus.loaded &&
-              state.cartEntity != null && state.cartEntity!.items.isEmpty) {
-              return AppEmptyView(
-                message: 'Your cart is empty',
-                icon: Icons.shopping_cart_outlined,
-              );
-            
-          }
-
-          final displayCart = isLoading && state.cartEntity == null
-              ? CartEntity.empty()
-              : state.cartEntity!;
-          
-          final productsById = isLoading
-              ? displayCart.items.asMap().map((index, item) => MapEntry(item.productId, ProductEntity.empty()))
-              : state.productsById;
-
-          return Skeletonizer(
-            enabled: isLoading,
-            child: Column(
-                children: [
-                  ListView.builder(
-                    itemCount: displayCart.items.length,
-                    itemBuilder: (context, index) {
-                      final item = displayCart.items[index];
-                      final product = productsById[item.productId];
-                      return CartItemCard(item: item, product: product);
-                    },
-                  ).expanded,
-                  AppSpacing.h_20.hSpace,
-                  AppButton(
-                    onPressed: () {
-                      // context.read<CartCubit>().clearCart();
-                      context.pushNamed(RoutePaths.checkoutName);
-                    },
-                    label:
-                        'Checkout   (${state.cartEntity!.totalPrice.toStringAsFixed(2)})',
-                  ).paddingHorizontal(AppSpacing.w_10),
-                  AppSpacing.h_50.hSpace,
-                ],
-              ),
-          );
-        },
+        builder: (context, state) => CartBody(state: state),
       ),
     );
   }
